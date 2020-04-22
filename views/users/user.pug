@@ -1,0 +1,16 @@
+h2 List User
+
+form(action="/users/search", method="GET")
+  input(type="text", name="q", value= value ? value : '')
+  button Search
+a(href="/users/create") Create User
+ul 
+  each user in listUser
+    li
+      span= user.name
+      span &nbsp &nbsp
+      a(href=`/users/view/${user.id}/`) view
+      span &nbsp &nbsp
+      a(href=`/users/${user.id}/delete`) delete
+      span &nbsp &nbsp
+      a(href=`/users/edit/${user.id}`) Edit

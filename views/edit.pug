@@ -1,6 +1,6 @@
 h1 Edit book
 
-form(action=`/books/edit/${id}`, method="POST")
+form(action=`/bookStore/books/edit/${id}`, method="POST")
   label Title
   input(type="text", name="title", value= book.title ? book.title : '')
   label Description
