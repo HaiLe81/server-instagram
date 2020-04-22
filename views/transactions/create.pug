@@ -1,16 +1,20 @@
-h2 Create Transaction
+extends ../layout/layout.pug
 
-form(action="/transactions/create", method="POST")
-  b User
-  br
-  select#user(name="user")
-    each user in users
-      option(value=user.id)= user.name
-  br
-  b Book
-  br
-  select#book(name="book", multiple)
-    each book in books
-      option(value=book.id)= book.title
-  br
-  button Create
+block cdn-bootstrap
+  h2 Create Transaction
+
+  form(action="/transactions/create", method="POST")
+    div.form-group
+      b User
+      br
+      select#user(name="user")
+        each user in users
+          option(value=user.id)= user.name
+      br
+      b Book
+      br
+      select#book(name="book",size="2" , multiple)
+        each book in books
+          option(value=book.id)= book.title
+      br
+      button.btn.btn-primary.mt-2 Create

@@ -48,7 +48,7 @@
     {
       "id": "transac01",
       "userId": "as89jk23p",
-      "isComplete": false,
+      "isComplete": true,
       "bookId": [
         "yTdzaclwf",
         "zcdzcIlwf"

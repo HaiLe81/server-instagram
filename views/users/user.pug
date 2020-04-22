@@ -1,16 +1,29 @@
-h2 List User
+extends ../layout/layout.pug
 
-form(action="/users/search", method="GET")
-  input(type="text", name="q", value= value ? value : '')
-  button Search
-a(href="/users/create") Create User
-ul 
-  each user in listUser
-    li
-      span= user.name
-      span &nbsp &nbsp
-      a(href=`/users/view/${user.id}/`) view
-      span &nbsp &nbsp
-      a(href=`/users/${user.id}/delete`) delete
-      span &nbsp &nbsp
-      a(href=`/users/edit/${user.id}`) Edit
+block cdn-bootstrap
+
+  h2 List User
+
+  form(action="/users/search", method="GET")
+    div.form-group.d-flex
+      input(class="form-control", type="text", name="q", value= value ? value : '')
+      button.btn.btn-primary Search
+  a.btn.btn-primary(href="/users/create") Create User
+  table.table.table-dark.mt-2
+    thead
+      tr
+        th STT
+        th User Name
+        th Action
+    tbody
+        - let count = 0
+          each user in listUser
+            tr
+              th= count+=1
+              td= user.name
+              td 
+                form(action="" method="POST")
+                  .form-group
+                      a.btn.btn-light.m-1(href=`/users/view/${user.id}/`) View
+                      a.btn.btn-light.m-1(href=`/users/edit/${user.id}`) Edit
+                      a.btn.btn-light.m-1(href=`/users/${user.id}/delete`) Delete

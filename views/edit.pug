@@ -1,8 +1,13 @@
-h1 Edit book
+extends ./layout/layout.pug
 
-form(action=`/bookStore/books/edit/${id}`, method="POST")
-  label Title
-  input(type="text", name="title", value= book.title ? book.title : '')
-  label Description
-  input(type="text", name="description", value= book.description ? book.description : '')
-  button Edit
+block cdn-bootstrap
+
+  h1 Edit book
+
+  form(action=`/bookStore/books/edit/${id}`, method="POST")
+    div.form-group
+      label Title
+      input(class="form-control" ,type="text", name="title", value= book.title ? book.title : '')
+      label Description
+      input(class="form-control" ,type="text", name="description", value= book.description ? book.description : '')
+      button.btn.btn-primary.mt-2 Edit

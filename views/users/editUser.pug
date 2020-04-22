@@ -1,6 +1,11 @@
-h1 Edit User
+extends ../layout/layout.pug
 
-form(action=`/users/edit/${id}`, method="POST")
-  label Name
-  input(type="text", name="name", value= user.name ? user.name : '')
-  button Edit
+block cdn-bootstrap
+
+  h1 Edit User
+
+  form(action=`/users/edit/${id}`, method="POST")
+    div.form-group
+      label Name
+      input(class="form-control", type="text", name="name", value= user.name ? user.name : '')
+      button.btn.btn-primary.mt-2 Edit
