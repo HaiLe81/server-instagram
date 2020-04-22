@@ -9,4 +9,6 @@ router.get("/create", tranController.create);
 
 router.post("/create", tranController.createPost);
 
+router.get("/:id/complete", tranController.complete)
+
 module.exports = router;
