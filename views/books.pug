@@ -1,16 +1,29 @@
-h2 List Book
+extends ./layout/layout.pug
 
-form(action="/bookStore/books/search", method="GET")
-  input(type="text", name="q", value= value ? value : '')
-  button Search
-a(href="/bookStore/books/create") Create
-ul 
-  each book in listBook
-    li
-      span= book.title
-      span &nbsp &nbsp
-      a(href=`/bookStore/books/view/${book.id}/`) view      
-      span &nbsp &nbsp
-      a(href=`/bookStore/books/${book.id}/delete`) delete
-      span &nbsp &nbsp
-      a(href=`/bookStore/books/edit/${book.id}`) Edit
+block cdn-bootstrap
+
+  h2 List Book
+
+  form(action="/bookStore/books/search", method="GET")
+    div.form-group.d-flex
+      input(class="form-control" ,type="text", name="q", value= value ? value : '')
+      button.btn.btn-primary Search
+  a(href="/bookStore/books/create", class="btn btn-primary") Create Book
+  table.table.table-dark.mt-2
+    thead
+      tr
+        th STT
+        th Book Title
+        th Action
+    tbody
+        - let count = 0
+        each book in listBook
+          tr
+            th= count+=1
+            td= book.title
+            td 
+              form(action="" method="POST")
+                .form-group
+                    a.btn.btn-light.m-1(href=`/bookStore/books/view/${book.id}/`) View
+                    a.btn.btn-light.m-1(href=`/bookStore/books/edit/${book.id}`) Edit
+                    a.btn.btn-light.m-1(href=`/bookStore/books/${book.id}/delete`) Delete

@@ -1,8 +1,11 @@
-h2 Create Book
+extends ../layout/layout.pug
 
-form(action="/users/create", method="POST")
-  label Name
-  br
-  input(name="name", type="text")
-  br
-  button Create
+block cdn-bootstrap
+
+  h2 Create Book
+
+    form(action="/users/create", method="POST")
+      div.form-group
+        label Name
+        input(class="form-control", name="name", type="text")
+        button.btn.btn-primary.mt-2 Create

@@ -1,27 +1,31 @@
-h1 Transactions
-a(href="/transactions/create") Create Transaction
-table
-  thead
-    tr
-      th STT
-      th User
-      th list Book
-      th 
-  tbody
-    - let count = 0;
-      each item in listTran
-        tr
-          td= count+=1
-          td= dataUser.find(x => x.id === item.userId).name
-          td
-            ul
-              - let listId = item.bookId
-              each val in listId
-                li= dataBook.find(item => item.id === val).title
-          td
-            if(item.isComplete === false)
-              span &nbsp &nbsp
-              a(href=`/transactions/${item.id}/complete`) Hoàn Thành
-            else
-              span &nbsp &nbsp
-              a(href="#") Đang Mượn
+extends ../layout/layout.pug
+
+block cdn-bootstrap
+
+  h1 Transactions
+  a.btn.btn-primary(href="/transactions/create") Create Transaction
+  table.table.table-dark.mt-2
+    thead
+      tr
+        th STT
+        th User
+        th list Book
+        th 
+    tbody
+      - let count = 0;
+        each item in listTran
+          tr
+            td= count+=1
+            td= dataUser.find(x => x.id === item.userId).name
+            td
+              ul
+                - let listId = item.bookId
+                each val in listId
+                  li= dataBook.find(item => item.id === val).title
+            td
+              if(item.isComplete === false)
+                span &nbsp &nbsp
+                a.btn.btn-light(href=`/transactions/${item.id}/complete`) Hoàn Thành
+              else
+                span &nbsp &nbsp
+                a.btn.btn-light(href="#") Đang Mượn

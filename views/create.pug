@@ -1,12 +1,17 @@
-h2 Create Book
+extends ./layout/layout.pug
 
-form(action="/bookStore/books/create", method="POST")
-  label Title
-  br
-  input(name="title", type="text")
-  br
-  label Description
-  br
-  input(name="description", type="text")
-  br
-  button Create
+block cdn-bootstrap
+
+  h2 Create Book
+
+  form(action="/bookStore/books/create", method="POST")
+    div.form-group
+      label Title
+      br
+      input(class="form-control" ,name="title", type="text")
+      br
+      label Description
+      br
+      input(class="form-control" ,name="description", type="text")
+      br
+      button(type="submit", class="btn btn-primary") Create
