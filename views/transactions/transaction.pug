@@ -1,11 +1,12 @@
 h1 Transactions
-a(href="/transaction/create") Create Transaction
+a(href="/transactions/create") Create Transaction
 table
   thead
     tr
       th STT
       th User
       th list Book
+      th 
   tbody
     - let count = 0;
       each item in listTran
@@ -14,5 +15,13 @@ table
           td= dataUser.find(x => x.id === item.userId).name
           td
             ul
-              each i in item.bookId
-                li= dataBook.find(x => x.id === i).title
+              - let listId = item.bookId
+              each val in listId
+                li= dataBook.find(item => item.id === val).title
+          td
+            if(item.isComplete === false)
+              span &nbsp &nbsp
+              a(href=`/transactions/${item.id}/complete`) Hoàn Thành
+            else
+              span &nbsp &nbsp
+              a(href="#") Đang Mượn
