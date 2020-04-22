@@ -1,0 +1,18 @@
+h1 Transactions
+a(href="/transaction/create") Create Transaction
+table
+  thead
+    tr
+      th STT
+      th User
+      th list Book
+  tbody
+    - let count = 0;
+      each item in listTran
+        tr
+          td= count+=1
+          td= dataUser.find(x => x.id === item.userId).name
+          td
+            ul
+              each i in item.bookId
+                li= dataBook.find(x => x.id === i).title

@@ -1,0 +1,6 @@
+h1 Edit User
+
+form(action=`/users/edit/${id}`, method="POST")
+  label Name
+  input(type="text", name="name", value= user.name ? user.name : '')
+  button Edit

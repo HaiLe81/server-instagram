@@ -1,0 +1,12 @@
+  // get data transactions
+- const db = require('../../db')
+
+- const dataUser = db.get('transactions').value()
+- const dataBook = db.get('listBooks').value()
+
+- function findUserById(userId) 
+  - const User = dataUser.find(item => item.id === userId)
+- function findBookById(bookId) 
+  - const Book = dataBook.find(item => item.id === bookId)
+
+  

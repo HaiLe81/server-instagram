@@ -1,0 +1,16 @@
+h2 Create Transaction
+
+form(action="/transaction/create", method="POST")
+  b User
+  br
+  select#user(name="user")
+    each user in users
+      option(value=user.id)= user.name
+  br
+  b Book
+  br
+  select#book(name="book", multiple)
+    each book in books
+      option(value=book.id)= book.title
+  br
+  button Create
