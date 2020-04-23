@@ -4,7 +4,7 @@ const db = require('../db')
 const shortid = require('shortid');
 
 const userController = require('../controller/user.controller')
-const validate = require('../validate/user.validate.js')
+// const validate = require('../validate/user.validate.js')
 
 router.get("/", userController.index);
 
@@ -14,7 +14,7 @@ router.get('/view/:id', userController.view)
 
 router.get("/create", userController.create);
 
-router.post("/create", validate.postCreate, userController.createPost);
+router.post("/create", userController.createPost);
 
 router.get("/:id/delete", userController.delete)
 

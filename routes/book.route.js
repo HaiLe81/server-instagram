@@ -4,9 +4,10 @@ const db = require('../db')
 const shortid = require('shortid');
 
 const bookController = require('../controller/book.controller')
+// const cookiesMiddleWare = require('../middleware/cookies.middleware')
 
 
-router.get("/books", bookController.index);
+router.get("/books",  bookController.index);
 
 router.get("/books/search", bookController.search);
 
