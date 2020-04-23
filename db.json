@@ -2,8 +2,8 @@
   "listBooks": [
     {
       "id": "yTdzaclwf",
-      "title": "Nấu Cơm 2233",
-      "description": "AAAAAA"
+      "title": "Nấu Cơm 1",
+      "description": "AAAAAAsda"
     },
     {
       "id": "yTdzcImll",
@@ -51,6 +51,8 @@
       "isComplete": true,
       "bookId": [
         "yTdzaclwf",
+        "yTdzcImll",
+        "yTdc21lwf",
         "zcdzcIlwf"
       ]
     },

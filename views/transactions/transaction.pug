@@ -1,6 +1,10 @@
 extends ../layout/layout.pug
 
 block cdn-bootstrap
+  
+  if errors
+    each error in errors
+      .alert.alert-danger= error
 
   h1 Transactions
   a.btn.btn-primary(href="/transactions/create") Create Transaction
