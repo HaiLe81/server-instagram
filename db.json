@@ -29,31 +29,28 @@
   "listUser": [
     {
       "id": "as89jk23p",
-      "name": "Le Khac hai"
+      "name": "Le Khac hai",
+      "email": "lekhachai9999@gmail.com",
+      "password": "123123",
+      "isAdmin": true
     },
     {
       "id": "as89jk13p",
-      "name": "Ngoc Canh"
+      "name": "Ngoc Canh",
+      "email": "NgocCanh@gmail.com",
+      "password": "123123"
     },
     {
       "id": "as89jk53p",
-      "name": "Nguyen Vy"
+      "name": "Nguyen Vy",
+      "email": "Nguyenvy@gmail.com",
+      "password": "123123"
     },
     {
       "id": "8QnKkqtaj",
-      "name": "Pham Thi Thanh"
-    },
-    {
-      "id": "M2HKGurcg",
-      "name": ""
-    },
-    {
-      "id": "gDlWVeIpT",
-      "name": "1"
-    },
-    {
-      "id": "zcx48Mf-U",
-      "name": "Bán Vé Máy Bay"
+      "name": "Pham Thi Thanh",
+      "email": "PhamThiThanh@gmail.com",
+      "password": "123123"
     }
   ],
   "transactions": [

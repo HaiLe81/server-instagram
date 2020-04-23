@@ -2,10 +2,22 @@ const db = require("../db");
 const shortid = require("shortid");
 
 module.exports = {
-  index: (request, response) => {
+  index: (req, res) => {
     try {
-      response.render("./transactions/transaction.pug", {
-        listTran: db.get("transactions").value(),
+      console.log("body:", req.cookies.userId);
+      const idAccount = req.cookies.userId;
+      let dataTransactions = [];
+      const dataAdmin = (db.get("listUser").find({ id: idAccount }).value()).isAdmin
+      console.log('dataAdmin', dataAdmin)
+      if(dataAdmin === undefined || dataAdmin === false){
+        dataTransactions = db.get("transactions")
+        .filter({ userId: idAccount })
+        .value()
+      } else {
+        dataTransactions = db.get("transactions").value()
+      }
+      res.render("./transactions/transaction.pug", {
+        listTran: dataTransactions,
         dataUser: db.get("listUser").value(),
         dataBook: db.get("listBooks").value()
       });
@@ -41,7 +53,7 @@ module.exports = {
 
       // need update code to can push addition listBook
       // code below only change all listBook
-      if (result === 'undefined') {
+      if (result === "undefined") {
         // not find userID
         console.log("run here 1");
         db.get("transactions")
@@ -71,7 +83,7 @@ module.exports = {
       const id = req.params.id;
       const data = db.get("transactions").value();
       const result = data.find(item => item.id === id);
-      console.log('complete', result)
+      console.log("complete", result);
       var errors = [];
       if (result === undefined) {
         errors.push("Transaction not exist!!");

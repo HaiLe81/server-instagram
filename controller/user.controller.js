@@ -60,7 +60,9 @@ module.exports = {
       db.get("listUser")
         .push({
           id: id,
-          name: req.body.name
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password
         })
         .write();
       res.redirect("/users/");
