@@ -1,3 +1,4 @@
+const md5 = require("md5")
 const db = require("../db");
 const shortid = require("shortid");
 
@@ -62,7 +63,7 @@ module.exports = {
           id: id,
           name: req.body.name,
           email: req.body.email,
-          password: req.body.password
+          password: md5(req.body.password)
         })
         .write();
       res.redirect("/users/");

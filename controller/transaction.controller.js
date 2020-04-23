@@ -4,11 +4,9 @@ const shortid = require("shortid");
 module.exports = {
   index: (req, res) => {
     try {
-      console.log("body:", req.cookies.userId);
       const idAccount = req.cookies.userId;
       let dataTransactions = [];
       const dataAdmin = (db.get("listUser").find({ id: idAccount }).value()).isAdmin
-      console.log('dataAdmin', dataAdmin)
       if(dataAdmin === undefined || dataAdmin === false){
         dataTransactions = db.get("transactions")
         .filter({ userId: idAccount })
@@ -49,7 +47,6 @@ module.exports = {
       let result = data.find(item => {
         item.userId === idUser;
       });
-      console.log("result", result);
 
       // need update code to can push addition listBook
       // code below only change all listBook
@@ -67,7 +64,6 @@ module.exports = {
       } else {
         // need change here
         // need fix error when choose one book
-        console.log("run here 2");
         db.get("transactions")
           .find({ userId: idUser })
           .assign({ bookId: req.body.book })
@@ -83,7 +79,6 @@ module.exports = {
       const id = req.params.id;
       const data = db.get("transactions").value();
       const result = data.find(item => item.id === id);
-      console.log("complete", result);
       var errors = [];
       if (result === undefined) {
         errors.push("Transaction not exist!!");
