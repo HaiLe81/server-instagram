@@ -6,7 +6,7 @@ module.exports = {
     var errors = [];
     const nameInput = req.body.name;
     const emailInput = req.body.email;
-    const passwordInput = md5(req.body.password);
+    const passwordInput = req.body.password;
     const data = db.get("listUser").value();
     const resultFindName = data.find(item => item.name === nameInput);
     const resultFindEmail = data.find(item => item.email === emailInput);
