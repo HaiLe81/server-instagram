@@ -55,7 +55,8 @@ module.exports = {
   createPost: (req, res) => {
     try {
       const id = shortid.generate();
-      // console.log('body', req.body)
+      const userInput = req.body.name;
+        
       db.get("listUser")
         .push({
           id: id,
