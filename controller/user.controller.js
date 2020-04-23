@@ -1,6 +1,8 @@
 const md5 = require("md5")
 const db = require("../db");
+const bcrypt = require('bcrypt');
 const shortid = require("shortid");
+const saltRounds = 10;
 
 module.exports = {
   index: (req, res) => {
@@ -57,15 +59,17 @@ module.exports = {
     try {
       const id = shortid.generate();
       const userInput = req.body.name;
-        
-      db.get("listUser")
+      bcrypt.hash(req.body.password, saltRounds, function(err, hash){
+        console.log('password bcrypt:', hash)
+        db.get("listUser")
         .push({
           id: id,
           name: req.body.name,
           email: req.body.email,
-          password: md5(req.body.password)
+          password: hash
         })
         .write();
+      })
       res.redirect("/users/");
     } catch (err) {
       console.log(err);
