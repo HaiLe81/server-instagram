@@ -1,3 +1,4 @@
+const md5 = require("md5") //md5 is third party libraries so must declare first
 const db = require("../db");
 
 module.exports = {
@@ -5,7 +6,7 @@ module.exports = {
     try {
       var errors = [];
       const email = req.body.email;
-      const password = req.body.password;
+      const password = md5(req.body.password);
 
       var user = db
         .get("listUser")
