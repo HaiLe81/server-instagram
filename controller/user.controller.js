@@ -2,9 +2,9 @@ const db = require("../db");
 const shortid = require("shortid");
 
 module.exports = {
-  index: (request, response) => {
+  index: (req, res) => {
     try {
-      response.render("./users/user.pug", {
+      res.render("./users/user.pug", {
         listUser: db.get("listUser").value()
       });
     } catch (err) {
@@ -45,9 +45,9 @@ module.exports = {
       console.log(err);
     }
   },
-  create: (request, response) => {
+  create: (req, res) => {
     try {
-      response.render("./users/createUser.pug");
+      res.render("./users/createUser.pug");
     } catch (err) {
       console.log(err);
     }
