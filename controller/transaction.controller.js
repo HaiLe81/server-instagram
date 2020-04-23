@@ -14,11 +14,15 @@ module.exports = {
     }
   },
   create: (req, res) => {
-    console.log("dbindex", db.get("transactions").value());
-    res.render("./transactions/create.pug", {
-      users: db.get("listUser").value(),
-      books: db.get("listBooks").value()
-    });
+    try {
+      console.log("dbindex", db.get("transactions").value());
+      res.render("./transactions/create.pug", {
+        users: db.get("listUser").value(),
+        books: db.get("listBooks").value()
+      });
+    } catch (err) {
+      console.log(err);
+    }
   },
   createPost: (req, res) => {
     try {
@@ -37,7 +41,7 @@ module.exports = {
 
       // need update code to can push addition listBook
       // code below only change all listBook
-      if (result === -1) {
+      if (result === 'undefined') {
         // not find userID
         console.log("run here 1");
         db.get("transactions")
@@ -63,16 +67,37 @@ module.exports = {
     res.redirect("/transactions/");
   },
   complete: (req, res) => {
-    const id = req.params.id;
-    db.get("transactions")
-      .find({ id: id })
-      .assign({ isComplete: true })
-      .write();
+    try {
+      const id = req.params.id;
+      const data = db.get("transactions").value();
+      const result = data.find(item => item.id === id);
+      console.log('complete', result)
+      var errors = [];
+      if (result === undefined) {
+        errors.push("Transaction not exist!!");
+      }
+      if (errors.length) {
+        res.render("./transactions/transaction.pug", {
+          listTran: db.get("transactions").value(),
+          dataUser: db.get("listUser").value(),
+          dataBook: db.get("listBooks").value(),
+          errors: errors
+        });
+        return;
+      }
 
-    res.render("./transactions/transaction.pug", {
-      listTran: db.get("transactions").value(),
-      dataUser: db.get("listUser").value(),
-      dataBook: db.get("listBooks").value()
-    });
+      db.get("transactions")
+        .find({ id: id })
+        .assign({ isComplete: true })
+        .write();
+
+      res.render("./transactions/transaction.pug", {
+        listTran: db.get("transactions").value(),
+        dataUser: db.get("listUser").value(),
+        dataBook: db.get("listBooks").value()
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
