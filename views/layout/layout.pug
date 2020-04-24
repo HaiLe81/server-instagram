@@ -23,7 +23,7 @@ html
                     a.nav-link(href='/transactions') Transactions   
           if user
             .d-flex.align-items-center
-              a.mr-2(href="/")= user.name
+              a.mr-2(href="/users/profile")= user.name
           if !user
             .btn-group
               a.btn.btn-primary(href="/auth/login", role="button") login

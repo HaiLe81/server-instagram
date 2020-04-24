@@ -11,7 +11,8 @@ module.exports = {
       res.redirect('/auth/login')
       return;
     }
-    
+    let pageCurrent = parseInt(req.query.page)
+    res.locals.page_Current = pageCurrent
     res.locals.user = user
     
     next()

@@ -33,3 +33,39 @@ block cdn-bootstrap
               else
                 span &nbsp &nbsp
                 a.btn.btn-light(href="#") Đang Mượn
+  nav(aria-label='Page navigation example')
+        ul.pagination.justify-content-end#myNavi
+          - let index = 1;
+            li(class=`page-item ${page_Current === 0 || page_Current === 1 || pageSize === 1 ? 'disabled' : '' }`)
+              a.page-link.previous(href='#', aria-label='Previous')
+                span(aria-hidden='true') &laquo;
+            - for (index ; index <= paginationSize; index++)
+              li.page-item.item(value = index)
+                a.page-link(href="/transactions/" + '?page=' + index )= index
+            li(class=`page-item ${page_Current === page || pageSize === 1 ? 'disabled' : '' }`)
+              a.page-link.next(href='/transactions/'+ '?page=', aria-label='Next')
+                span(aria-hidden='true') &raquo;
+
+  script.
+        // get index navigation 
+        let href = document.location.href;
+        let pageNum = parseInt(href.slice(-1));
+        pageNum === NaN || pageNum === 1 ? pageNum=1 : pageNum;
+        let lis = document.getElementsByClassName('item');
+        for(let j = 0; j< lis.length; j++) {
+            let li1 = lis[j];
+            let vl = parseInt(li1.getAttribute('value'));
+            if(vl === pageNum){
+                li1.classList.add("active")
+            }
+        }
+
+        // next page
+        let next = document.getElementsByClassName('next');
+        // change attribute href next 
+        next[0].setAttribute("href", "/transaction/?page=" + (pageNum+1))
+
+        // previous page
+        let previous = document.getElementsByClassName("previous");
+        // change attribute href previous
+        previous[0].setAttribute("href", "/transactions/?page=" + (pageNum-1))
