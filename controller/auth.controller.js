@@ -19,7 +19,9 @@ module.exports = {
       .find({ email: email })
       .value();
     // pass userId = user.id
-    res.cookie("userId", user.id);
+    res.cookie("userId", user.id, {
+      signed: true
+    });
     res.redirect("/users");
   }
 };

@@ -33,7 +33,7 @@
       "email": "lekhachai9999@gmail.com",
       "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
       "isAdmin": true,
-      "wrongLoginCount": 3
+      "wrongLoginCount": 0
     },
     {
       "id": "as89jk13p",

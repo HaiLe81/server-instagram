@@ -51,6 +51,7 @@ module.exports = {
         });
         return;
       }
+      
       next();
     } catch (err) {
       console.log(err);
