@@ -1,4 +1,5 @@
 const md5 = require("md5"); //md5 is third party libraries so must declare first
+const sgMail = require("@sendgrid/mail");
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -28,6 +29,30 @@ module.exports = {
           errors.push(
             "Enter the wrong password more than the specified number of times. Pleasa comback after a day"
           );
+          // using Twilio SendGrid's v3 Node.js Library
+          // https://github.com/sendgrid/sendgrid-nodejs
+          const sgMail = require("@sendgrid/mail");
+          sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+          const msg = {
+            to: email,
+            from: 'lekhachai7979@gmail.com',
+            subject:
+              "Enter the wrong password more than the specified number of times",
+            text:
+              "If you receive this email, because you have entered the wrong password more than 3 times. The account will be reopened in 24 hours after receiving this email. If you want to reopen your account quickly or contact us via email <lekhachai9999@gmail.com>",
+            html:
+              "If you receive this email, because you have entered the wrong password more than 3 times. The account will be reopened in 24 hours after receiving this email. If you want to reopen your account quickly or contact us via email <lekhachai9999@gmail.com>"
+          };
+          sgMail.send(msg).then(
+            () => {},
+            error => {
+              console.error(error);
+
+              if (error.response) {
+                console.error(error.response.body);
+              }
+            }
+          );
         } else {
           // const hash = bcrypt.hashSync(password, saltRounds);
           const result = bcrypt.compareSync(password, user.password);
@@ -39,7 +64,6 @@ module.exports = {
               .find({ email: email })
               .assign({ wrongLoginCount: (countWrongPassword += 1) })
               .write();
-            console.log("countWrongPassword2:", countWrongPassword);
           }
         }
       }
@@ -51,7 +75,7 @@ module.exports = {
         });
         return;
       }
-      
+
       next();
     } catch (err) {
       console.log(err);

@@ -3,6 +3,8 @@
 
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
+require('dotenv').config()
+
 const express = require("express");
 const cookieParser = require('cookie-parser')
 const app = express();
@@ -21,12 +23,12 @@ app.set('views', './views')
 app.use(express.static("public"));
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(cookieParser('HuflitFreelancer'))
+app.use(cookieParser(process.env.SESSION_SECRET))
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
-
+console.log('secr', process.env.SESSION_SECRET)
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, (req, res) => {
   res.cookie('user-id', 2626)
