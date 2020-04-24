@@ -32,25 +32,29 @@
       "name": "Le Khac hai",
       "email": "lekhachai9999@gmail.com",
       "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
-      "isAdmin": true
+      "isAdmin": true,
+      "wrongLoginCount": 3
     },
     {
       "id": "as89jk13p",
       "name": "Ngoc Canh",
       "email": "NgocCanh@gmail.com",
-      "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO"
+      "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
+      "wrongLoginCount": 0
     },
     {
       "id": "as89jk53p",
       "name": "Nguyen Vy",
       "email": "Nguyenvy@gmail.com",
-      "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO"
+      "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
+      "wrongLoginCount": 0
     },
     {
       "id": "8QnKkqtaj",
       "name": "Pham Thi Thanh",
       "email": "PhamThiThanh@gmail.com",
-      "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO"
+      "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
+      "wrongLoginCount": 0
     }
   ],
   "transactions": [
