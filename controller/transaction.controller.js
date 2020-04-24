@@ -4,7 +4,7 @@ const shortid = require("shortid");
 module.exports = {
   index: (req, res) => {
     try {
-      const idAccount = req.cookies.userId;
+      const idAccount = req.signedCookies.userId;
       let dataTransactions = [];
       const dataAdmin = (db.get("listUser").find({ id: idAccount }).value()).isAdmin
       if(dataAdmin === undefined || dataAdmin === false){

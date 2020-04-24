@@ -20,7 +20,14 @@ html
                   li.nav-item
                       a.nav-link(href='/bookStore/books') Book
                   li.nav-item
-                    a.nav-link(href='/transactions') Transactions            
+                    a.nav-link(href='/transactions') Transactions   
+          if user
+            .d-flex.align-items-center
+              a.mr-2(href="/")= user.name
+          if !user
+            .btn-group
+              a.btn.btn-primary(href="/auth/login", role="button") login
+              //a.btn.btn-primary(href="/auth/register",role="button") Sign up
             
     .container.pt-5
             block cdn-bootstrap

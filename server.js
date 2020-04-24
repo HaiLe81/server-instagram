@@ -21,7 +21,7 @@ app.set('views', './views')
 app.use(express.static("public"));
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(cookieParser())
+app.use(cookieParser('HuflitFreelancer'))
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
