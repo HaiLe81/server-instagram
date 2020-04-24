@@ -33,7 +33,7 @@
       "email": "lekhachai9999@gmail.com",
       "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
       "isAdmin": true,
-      "wrongLoginCount": 3
+      "wrongLoginCount": 0
     },
     {
       "id": "as89jk13p",
@@ -70,6 +70,24 @@
     {
       "id": "transac02",
       "userId": "8QnKkqtaj",
+      "isComplete": false,
+      "bookId": [
+        "yTdzaclwf",
+        "zcdzcIlwf"
+      ]
+    },
+    {
+      "id": "transac02",
+      "userId": "as89jk13p",
+      "isComplete": false,
+      "bookId": [
+        "yTdzaclwf",
+        "zcdzcIlwf"
+      ]
+    },
+    {
+      "id": "transac02",
+      "userId": "as89jk53p",
       "isComplete": false,
       "bookId": [
         "yTdzaclwf",

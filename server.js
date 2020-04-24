@@ -28,7 +28,7 @@ app.use(cookieParser(process.env.SESSION_SECRET))
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
-console.log('secr', process.env.SESSION_SECRET)
+
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, (req, res) => {
   res.cookie('user-id', 2626)

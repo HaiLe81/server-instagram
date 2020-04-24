@@ -6,18 +6,38 @@ module.exports = {
     try {
       const idAccount = req.signedCookies.userId;
       let dataTransactions = [];
-      const dataAdmin = (db.get("listUser").find({ id: idAccount }).value()).isAdmin
-      if(dataAdmin === undefined || dataAdmin === false){
-        dataTransactions = db.get("transactions")
-        .filter({ userId: idAccount })
-        .value()
+
+      let page = parseInt(req.query.page) || 1;
+      let perPage = 3;
+
+      let start = (page - 1) * perPage;
+      let end = page * perPage;
+      
+      const dataAdmin = db
+        .get("listUser")
+        .find({ id: idAccount })
+        .value().isAdmin;
+
+      if (dataAdmin === undefined || dataAdmin === false) {
+        dataTransactions = db
+          .get("transactions")
+          .filter({ userId: idAccount })
+          .value();
       } else {
-        dataTransactions = db.get("transactions").value()
+        dataTransactions = db.get("transactions").value();
       }
+
+      let pageSize = Math.ceil(dataTransactions.length/3)
+      
+      let paginationSizes = pageSize >= 3 ? 3 :  pageSize
+      
       res.render("./transactions/transaction.pug", {
-        listTran: dataTransactions,
+        listTran: dataTransactions.slice(start, end),
+        fullListTran: dataTransactions,
         dataUser: db.get("listUser").value(),
-        dataBook: db.get("listBooks").value()
+        dataBook: db.get("listBooks").value(),
+        paginationSize: paginationSizes,
+        pageSize: pageSize
       });
     } catch (err) {
       console.log(err);
