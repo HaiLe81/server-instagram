@@ -6,5 +6,8 @@ const cartController = require('../controller/cart.controller')
 
 
 router.get("/add/:bookId",  cartController.addToCart);
+router.get("/", cartController.index)
+// router.get("/:bookId/delete",  cartController.addToCart);
+
 
 module.exports = router;

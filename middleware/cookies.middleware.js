@@ -1,4 +1,4 @@
-const db = require('../db')
+const db = require("../db");
 let cookies_req = {};
 let counter = 0;
 
@@ -32,8 +32,14 @@ module.exports = {
         res.cookie("count", count);
       }
       console.log(`count: ${count} 1`);
-      const user = db.get('listUser').find({ id: req.signedCookies.userId }).value()
-      res.locals.user = user
+
+      // isUser
+      const user = db
+        .get("listUser")
+        .find({ id: req.signedCookies.userId })
+        .value();
+
+      res.locals.user = user;
       next();
     } catch (err) {
       console.log(err);

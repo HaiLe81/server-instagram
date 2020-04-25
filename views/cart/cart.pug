@@ -1,0 +1,26 @@
+extends ../layout/layout.pug
+
+block cdn-bootstrap
+  
+  h1 My Order
+  
+  table.table.table-dark.mt-2
+    thead
+      tr
+        th STT
+        th Book Name
+        th Action
+    tbody
+        - let count = 0
+        each idBook in keyArr
+          tr
+            - let e = dataBook.find(x => x.id === idBook).title
+              th= count+=1
+              td= e
+              td
+                //img.img-fluid.rounded-circle(src=book.coverUrl, alt="not fount", width="64px")
+              td 
+                form(action="" method="POST")
+                  .form-group
+                      a.btn.btn-light.m-1(href=`/cart/${book}/delete`) Delete
+  button.btn.btn-primary.mt-2 Rent  

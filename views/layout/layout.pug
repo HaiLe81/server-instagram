@@ -24,7 +24,11 @@ html
                   li.nav-item
                       a.nav-link(href='/bookStore/books') Book
                   li.nav-item
-                    a.nav-link(href='/transactions') Transactions   
+                    a.nav-link(href='/transactions') Transactions
+                  li.nav-item.d-flex.align-items-center
+                    a.cart(href="/cart")
+                      img.nav-link(src="https://cdn.glitch.com/1eeeaa03-4c95-4acc-925a-ac933fed2ce6%2Fsupermarket.svg?v=1587797125082", style="height:30px; width:20px; padding:0")
+                      span.count= countBooks === undefined ? 0 : countBooks
           if user
             .d-flex.align-items-center.dropdown
               a.nav-link.dropdown-toggle#dropdownMenuButton(role="button",data-toggle="dropdown", aria-haspopup="true", aria-expanded="false")= user.name
