@@ -21,9 +21,53 @@ block cdn-bootstrap
           tr
             th= count+=1
             td= book.title
+            td
+              img.img-fluid.rounded-circle(src=book.coverUrl, alt="not fount", width="64px")
             td 
               form(action="" method="POST")
-                .form-group
+                if user
+                  .form-group
                     a.btn.btn-light.m-1(href=`/bookStore/books/view/${book.id}/`) View
                     a.btn.btn-light.m-1(href=`/bookStore/books/edit/${book.id}`) Edit
                     a.btn.btn-light.m-1(href=`/bookStore/books/${book.id}/delete`) Delete
+                    a.btn.btn-light.m-1(href=`/cart/add/${book.id}`) Add
+                if !user
+                  .form-group
+                      a.btn.btn-light.m-1(href=`/cart/add/${book.id}`) Add
+                      
+  nav(aria-label='Page navigation example')
+        ul.pagination.justify-content-end#myNavi
+          - let index = 1;
+            li(class=`page-item ${ pageCurrent === NaN ||page_Current === 0 || page_Current === 1 || pageSize === 1 ? 'disabled' : '' }`)
+              a.page-link.previous(href='#', aria-label='Previous')
+                span(aria-hidden='true') &laquo;
+            - for (index ; index <= paginationSize; index++)
+              li.page-item.item(value = index)
+                a.page-link(href="/bookStore/books" + '?page=' + index )= index
+            li(class=`page-item ${page_Current === pageSize || pageSize === 1 ? 'disabled' : '' }`)
+              a.page-link.next(href='/bookStore/books'+ '?page=', aria-label='Next')
+                span(aria-hidden='true') &raquo;
+
+  script.
+        // get index navigation 
+        let href = document.location.href;
+        let pageNum = parseInt(href.slice(-1));
+        pageNum === NaN || pageNum === 1 ? pageNum=1 : pageNum;
+        let lis = document.getElementsByClassName('item');
+        for(let j = 0; j< lis.length; j++) {
+            let li1 = lis[j];
+            let vl = parseInt(li1.getAttribute('value'));
+            if(vl === pageNum){
+                li1.classList.add("active")
+            }
+        }
+
+        // next page
+        let next = document.getElementsByClassName('next');
+        // change attribute href next 
+        next[0].setAttribute("href", "/bookStore/books?page=" + (pageNum+1))
+
+        // previous page
+        let previous = document.getElementsByClassName("previous");
+        // change attribute href previous
+        previous[0].setAttribute("href", "/bookStore/books?page=" + (pageNum-1))

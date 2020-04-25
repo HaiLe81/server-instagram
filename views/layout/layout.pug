@@ -6,6 +6,10 @@ html
         link(rel="stylesheet", href="/style/custom.css")
         link(id="favicon", rel="icon", href="https://cdn.glitch.com/1eeeaa03-4c95-4acc-925a-ac933fed2ce6%2FcodersX.png?v=1587615408346")
         script(href="/public/javascript/navigation.js")
+        script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js' integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous')
+        script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous')
+        script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous')
+
     body
        nav.navbar.navbar-expand-sm.navbar-light.bg-light
           a.font-weight-bold.navbar-brand(href='/') FreelHuflit
@@ -22,8 +26,11 @@ html
                   li.nav-item
                     a.nav-link(href='/transactions') Transactions   
           if user
-            .d-flex.align-items-center
-              a.mr-2(href="/users/profile")= user.name
+            .d-flex.align-items-center.dropdown
+              a.nav-link.dropdown-toggle#dropdownMenuButton(role="button",data-toggle="dropdown", aria-haspopup="true", aria-expanded="false")= user.name
+              .dropdown-menu
+                a.dropdown-item(href="/users/profile") Profile
+                a.dropdown-item(href="/auth/logout") Logout
           if !user
             .btn-group
               a.btn.btn-primary(href="/auth/login", role="button") login

@@ -42,8 +42,8 @@ block cdn-bootstrap
             - for (index ; index <= paginationSize; index++)
               li.page-item.item(value = index)
                 a.page-link(href="/transactions/" + '?page=' + index )= index
-            li(class=`page-item ${page_Current === page || pageSize === 1 ? 'disabled' : '' }`)
-              a.page-link.next(href='/transactions/'+ '?page=', aria-label='Next')
+            li(class=`page-item ${page_Current === pageSize || pageSize === 1 ? 'disabled' : '' }`)
+              a.page-link.next(href='#', aria-label='Next')
                 span(aria-hidden='true') &raquo;
 
   script.

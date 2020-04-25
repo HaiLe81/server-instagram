@@ -3,7 +3,8 @@
     {
       "id": "yTdzaclwf",
       "title": "Nấu Cơm 1",
-      "description": "AAAAAAsda"
+      "description": "AAAAAAsda",
+      "coverUrl": "http://res.cloudinary.com/hai-le/image/upload/v1587795728/lzlvcrd0gvj6ctaftbwq.png"
     },
     {
       "id": "yTdzcImll",
@@ -95,6 +96,14 @@
         "yTdzaclwf",
         "zcdzcIlwf"
       ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "y1s09xIjH",
+      "cart": {
+        "yTdc21lwf": 1
+      }
     }
   ]
 }
