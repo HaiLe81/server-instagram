@@ -17,7 +17,7 @@ const cartRoute = require('./routes/cart.route')
 const transactionRoute = require('./routes/transaction.route')
 const authMiddleWare = require('./middleware/auth.middleware')
 const sessionMiddleWare = require('./middleware/session.middleware')
-
+const cartMiddleWare = require('./middleware/cart.middleware')
 const cookiesMiddleWare = require('./middleware/cookies.middleware')
 
 app.set('view engine', 'pug')
@@ -27,10 +27,7 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cookieParser(process.env.SESSION_SECRET))
 app.use(sessionMiddleWare.reqSession)
-// app.use((req,res, next) => {
-//   const user = db.get('listUser').find({ id: req.signedCookies.userId }).value()
-//   res.locals.user = user
-// })
+
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
@@ -42,6 +39,7 @@ app.get("/", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, (
   res.render("index.pug");
 });
 
+app.use(cartMiddleWare.cart)
 app.use("/cart", cartRoute)
 app.use("/auth", authRoute, cookiesMiddleWare.countCookieRequest, cookiesMiddleWare.countCookieRequest)
 app.use("/bookStore", cookiesMiddleWare.countCookieRequest, bookRoute)
