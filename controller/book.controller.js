@@ -1,11 +1,34 @@
+var cloudinary = require("cloudinary").v2;
 const db = require("../db");
 const shortid = require("shortid");
-
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_SECRET
+});
 module.exports = {
-  index: (request, response) => {
+  index: (req, res) => {
     try {
-      response.render("books.pug", {
-        listBook: db.get("listBooks").value()
+      let page = parseInt(req.query.page) || 1;
+      let perPage = 3;
+
+      let start = (page - 1) * perPage;
+      let end = page * perPage;
+
+      let dataBooks = db.get("listBooks").value();
+
+      let pageSize = Math.ceil(dataBooks.length / 3);
+
+      let paginationSizes = pageSize >= 3 ? 3 : pageSize;
+
+      let pageCurrent = parseInt(req.query.page);
+
+      res.render("books.pug", {
+        listBook: dataBooks.slice(start, end),
+        fullBook: dataBooks,
+        paginationSize: paginationSizes,
+        pageSize: pageSize,
+        page_Current: pageCurrent
       });
     } catch (err) {
       console.log(err);
@@ -98,16 +121,25 @@ module.exports = {
       console.log(err);
     }
   },
-  editPost: (req, res) => {
+  editPost: async (req, res) => {
     try {
       // let id = parseInt(req.params.id);
-      console.log("body1", req.body);
-
       let id = req.params.id;
       console.log("id:", id);
+
+      const file = req.file.path;
+      const path = await cloudinary.uploader
+        .upload(file)
+        .then(result => result.url)
+        .catch(error => console.log("erro:::>", error));
+
       db.get("listBooks")
         .find({ id: id })
-        .assign({ title: req.body.title, description: req.body.description })
+        .assign({
+          title: req.body.title,
+          description: req.body.description,
+          coverUrl: path
+        })
         .write();
       res.redirect("/bookStore/books");
     } catch (err) {

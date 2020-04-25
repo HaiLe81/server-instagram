@@ -23,5 +23,11 @@ module.exports = {
       signed: true
     });
     res.redirect("/users");
+  },
+  postLogOut: (req, res) => {
+    res.clearCookie("userId", {
+      path: "/"
+    });
+    res.redirect("/auth/login");
   }
 };

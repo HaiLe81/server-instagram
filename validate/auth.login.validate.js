@@ -11,9 +11,6 @@ module.exports = {
       const email = req.body.email;
       const password = req.body.password;
 
-      console.log("password", password);
-      console.log("email", email);
-
       const user = db
         .get("listUser")
         .find({ email: req.body.email })
@@ -24,11 +21,11 @@ module.exports = {
       } else {
         let passwordData = user.password;
         let countWrongPassword = user.wrongLoginCount;
-        console.log("countWrongPassword:", countWrongPassword);
         if (countWrongPassword >= 3) {
           errors.push(
             "Enter the wrong password more than the specified number of times. Pleasa comback after a day"
           );
+          
           // using Twilio SendGrid's v3 Node.js Library
           // https://github.com/sendgrid/sendgrid-nodejs
           const sgMail = require("@sendgrid/mail");

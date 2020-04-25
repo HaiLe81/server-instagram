@@ -4,10 +4,12 @@ block cdn-bootstrap
 
   h1 Edit book
 
-  form(action=`/bookStore/books/edit/${id}`, method="POST")
+  form(action=`/bookStore/books/edit/${id}`, method="POST", enctype="multipart/form-data")
     div.form-group
       label Title
       input(class="form-control" ,type="text", name="title", value= book.title ? book.title : '')
       label Description
       input(class="form-control" ,type="text", name="description", value= book.description ? book.description : '')
+      labe(for="avatar") Book Cover
+      input#bookCover.form-control-file(name="bookCover", type="file")
       button.btn.btn-primary.mt-2 Edit
