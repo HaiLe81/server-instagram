@@ -32,6 +32,7 @@ app.use(sessionMiddleWare.reqSession)
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
+app.use(cartMiddleWare.cart)
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get("/", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, (req, res) => {
@@ -39,8 +40,7 @@ app.get("/", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, (
   res.render("index.pug");
 });
 
-app.use(cartMiddleWare.cart)
-app.use("/cart", cartRoute)
+app.use("/cart", cookiesMiddleWare.countCookieRequest, cartRoute)
 app.use("/auth", authRoute, cookiesMiddleWare.countCookieRequest, cookiesMiddleWare.countCookieRequest)
 app.use("/bookStore", cookiesMiddleWare.countCookieRequest, bookRoute)
 app.use("/users", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, userRoute)
