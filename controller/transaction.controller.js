@@ -59,7 +59,6 @@ module.exports = {
       const id = shortid.generate();
       const idUser = req.body.user;
       const idBook = req.body.book;
-
       // let result = data.find(item => item.userId === idUser)
       // console.log('result', result instanceof Array)
 

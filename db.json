@@ -66,10 +66,7 @@
       "id": "transac01",
       "userId": "as89jk23p",
       "isComplete": true,
-      "bookId": [
-        "yTdzaclwf",
-        "zcdzcIlwf"
-      ]
+      "bookId": "yTdzaclwf"
     },
     {
       "id": "transac02",
@@ -129,6 +126,9 @@
         "yTdzcI01f": 2,
         "zcdzcIlwf": 1
       }
+    },
+    {
+      "id": "Bbbz00fBY"
     }
   ]
 }
