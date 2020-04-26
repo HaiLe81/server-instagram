@@ -8,22 +8,21 @@ module.exports = {
       .get("sessions")
       .find({ id: id })
       .value();
-    console.log("dataBook", dataBook);
-    if (dataBook === undefined) {
+
+    if (!dataBook) {
       let listBookChoose = "";
-      console.log("listChooseUnde", listBookChoose);
     }
     let listBookChoose = dataBook.cart;
-    console.log("listChoose", listBookChoose);
+
     // count number book choosed
     // get values of object
     // convert object to array
-    if (listBookChoose === undefined || listBookChoose === null) {
+    if (!listBookChoose) {
       const valuesArr = [];
       // get id of book
       const keyArr = [];
       const result = valuesArr.reduce((acc, cur) => (acc += cur), 0);
-      console.log("result", result);
+
       res.locals.keyArr = keyArr;
       res.locals.countBooks = result;
     } else {
@@ -31,7 +30,7 @@ module.exports = {
       // get id of book
       const keyArr = Object.keys(listBookChoose);
       const result = valuesArr.reduce((acc, cur) => (acc += cur), 0);
-      console.log("result", result);
+
       res.locals.keyArr = keyArr;
       res.locals.valueArr = valuesArr;
       res.locals.countBooks = result;

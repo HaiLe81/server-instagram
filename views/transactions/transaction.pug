@@ -24,8 +24,11 @@ block cdn-bootstrap
             td
               ul
                 - let listId = item.bookId
-                each val in listId
-                  li= dataBook.find(item => item.id === val).title
+                if (typeof listId === "string")
+                  li= dataBook.find(item => item.id === listId).title
+                else
+                  each val in listId
+                    li= dataBook.find(item => item.id === val).title
             td
               if(item.isComplete === false)
                 span &nbsp &nbsp

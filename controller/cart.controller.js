@@ -65,15 +65,25 @@ module.exports = {
       .get("sessions")
       .find({ id: id })
       .value();
+
     console.log("object", object);
     // use lodash get data in cart
-    let a = _.get(object, `cart.${idBook}`);
-    console.log("a", a);
-    // remove  choosed book
-    // db.get("a")
-    //   .find({ id: idBook })
-    //   .remove(`${idBook}`)
-    //   .write();
+
+    if (object) {
+      let shallowCart = JSON.parse(JSON.stringify(object));
+      console.log("aaaaa", shallowCart.cart);
+      shallowCart.cart[`${idBook}`]--;
+      console.log(shallowCart);
+      if(shallowCart.cart[`${idBook}`] === 0) {
+        delete shallowCart.cart[`${idBook}`]
+      }
+
+      db.get("sessions")
+      .find({ id: id })
+      .assign(shallowCart)
+      .write()
+    }
+    
     res.redirect("/cart");
   },
   postCart: (req, res) => {
@@ -113,11 +123,11 @@ module.exports = {
             .write();
         } else {
           db.get("transactions")
-          .find({ userId: userId })
-          .assign({ 
-            bookId: valuesArr
-          })
-          .write()
+            .find({ userId: userId })
+            .assign({
+              bookId: valuesArr
+            })
+            .write();
         }
       }
       if (notifi.length > 0) {

@@ -60,7 +60,6 @@ module.exports = {
         .get("listBooks")
         .find({ id: id })
         .value();
-      console.log("book", book);
       res.render("view.pug", {
         book: book
       });
@@ -95,7 +94,6 @@ module.exports = {
     try {
       // let id = parseInt(req.params.id);
       let id = req.params.id;
-      console.log("id", id);
       db.get("listBooks")
         .remove({ id: id })
         .write();
@@ -116,7 +114,6 @@ module.exports = {
         book: book,
         id: id
       });
-      console.log("body", req.body);
     } catch (err) {
       console.log(err);
     }
@@ -125,7 +122,6 @@ module.exports = {
     try {
       // let id = parseInt(req.params.id);
       let id = req.params.id;
-      console.log("id:", id);
 
       const file = req.file.path;
       const path = await cloudinary.uploader
