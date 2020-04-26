@@ -1,13 +1,13 @@
+var _ = require("lodash");
 const db = require("../db");
 const shortid = require("shortid");
 
 module.exports = {
   index: (req, res) => {
-    const dataBook = db.get("listBooks").value()
-    console.log('databook', dataBook instanceof Array)
+    const dataBook = db.get("listBooks").value();
     res.render("./cart/cart.pug", {
       dataBook: dataBook
-    })
+    });
   },
   addToCart: (req, res) => {
     try {
@@ -52,6 +52,84 @@ module.exports = {
         page_Current: pageCurrent
       });
       // res.redirec("/booksStore/books");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  delete: (req, res) => {
+    const id = req.signedCookies.sessionId;
+    const idBook = req.params.bookId;
+    console.log("idBook", idBook);
+    // get object have id: sessionId
+    let object = db
+      .get("sessions")
+      .find({ id: id })
+      .value();
+    console.log("object", object);
+    // use lodash get data in cart
+    let a = _.get(object, `cart.${idBook}`);
+    console.log("a", a);
+    // remove  choosed book
+    // db.get("a")
+    //   .find({ id: idBook })
+    //   .remove(`${idBook}`)
+    //   .write();
+    res.redirect("/cart");
+  },
+  postCart: (req, res) => {
+    try {
+      const id = req.signedCookies.sessionId;
+      const userId = req.signedCookies.userId;
+      const idTranSactions = shortid.generate();
+      var notifi = [];
+      // check has user login
+      const user = db
+        .get("listUser")
+        .find({ id: userId })
+        .value();
+      if (!user) {
+        notifi.push("You need to be logged in to perform this operation");
+      } else {
+        // get values of cart need add to transactions
+        const dataBook = db
+          .get("sessions")
+          .find({ id: id })
+          .value();
+        const checkUser = db
+          .get("transactions")
+          .find({ userId: userId })
+          .value();
+        const valuesArr = Object.keys(dataBook.cart);
+        // check transactions has user?
+        if (!checkUser) {
+          // add transactions with userId
+          db.get("transactions")
+            .push({
+              id: idTranSactions,
+              userId: userId,
+              bookId: valuesArr,
+              isComplete: false
+            })
+            .write();
+        } else {
+          db.get("transactions")
+          .find({ userId: userId })
+          .assign({ 
+            bookId: valuesArr
+          })
+          .write()
+        }
+      }
+      if (notifi.length > 0) {
+        const dataBook = db.get("listBooks").value();
+        res.render("./cart/cart.pug", {
+          dataBook: dataBook,
+          notifi: notifi
+        });
+      } else {
+        console.log("db:>", db.get("transactions").value());
+        res.redirect("/bookStore/books");
+      }
     } catch (err) {
       console.log(err);
     }

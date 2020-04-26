@@ -3,12 +3,14 @@
     {
       "id": "yTdzaclwf",
       "title": "Nấu Cơm 1",
-      "description": "AAAAAAsda"
+      "description": "AAAAAAsda",
+      "coverUrl": "http://res.cloudinary.com/hai-le/image/upload/v1587826693/m833swlmymvgnzkn5ova.png"
     },
     {
       "id": "yTdzcImll",
       "title": "Ăn Cơm",
-      "description": "AAAAAA"
+      "description": "AAAAAA",
+      "coverUrl": "http://res.cloudinary.com/hai-le/image/upload/v1587826702/gpkiesgut2al8rtk7cti.png"
     },
     {
       "id": "yTdc21lwf",
@@ -75,6 +77,9 @@
       "isComplete": false,
       "bookId": [
         "yTdzaclwf",
+        "yTdzcImll",
+        "yTdc21lwf",
+        "yTdzcI01f",
         "zcdzcIlwf"
       ]
     },
@@ -113,6 +118,16 @@
         "yTdzaclwf": 3,
         "yTdzcImll": 3,
         "yTdc21lwf": 1
+      }
+    },
+    {
+      "id": "kqP152EO-",
+      "cart": {
+        "yTdzaclwf": 2,
+        "yTdzcImll": 1,
+        "yTdc21lwf": 2,
+        "yTdzcI01f": 2,
+        "zcdzcIlwf": 1
       }
     }
   ]

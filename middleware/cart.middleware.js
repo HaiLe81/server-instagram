@@ -33,6 +33,7 @@ module.exports = {
       const result = valuesArr.reduce((acc, cur) => (acc += cur), 0);
       console.log("result", result);
       res.locals.keyArr = keyArr;
+      res.locals.valueArr = valuesArr;
       res.locals.countBooks = result;
     }
 

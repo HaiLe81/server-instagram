@@ -40,6 +40,7 @@ module.exports = {
         .value();
 
       res.locals.user = user;
+      console.log('userMid', user)
       next();
     } catch (err) {
       console.log(err);
