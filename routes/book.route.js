@@ -15,7 +15,11 @@ router.get("/books/view/:id", bookController.view);
 
 router.get("/books/create", bookController.create);
 
-router.post("/books/create", bookController.createPost);
+router.post(
+  "/books/create",
+  upload.single("bookCover"),
+  bookController.createPost
+);
 
 router.get("/books/:id/delete", bookController.delete);
 

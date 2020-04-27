@@ -23,16 +23,17 @@ block cdn-bootstrap
             th= count+=1
             td= book.title
             td
-              img.img-fluid.rounded-circle(src=book.coverUrl, alt="not fount", width="64px")
+              img.img-fluid.rounded-circle(src=`${book.coverUrl ? book.coverUrl : 'https://arm256.com/jspui/image/default-cover-item.jpg'}`, alt="not fount", width="64px")
             td 
               form(action="" method="POST")
-                if user
+                - console.log('isAdmin', isAdmin)
+                if isAdmin
                   .form-group
                     a.btn.btn-light.m-1(href=`/bookStore/books/view/${book.id}/`) View
                     a.btn.btn-light.m-1(href=`/bookStore/books/edit/${book.id}`) Edit
                     a.btn.btn-light.m-1(href=`/bookStore/books/${book.id}/delete`) Delete
                     a.btn.btn-light.m-1(href=`/cart/add/${book.id}`) Add
-                if !user
+                if !isAdmin
                   .form-group
                       a.btn.btn-light.m-1(href=`/cart/add/${book.id}`) Add
                       

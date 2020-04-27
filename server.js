@@ -3,48 +3,93 @@
 
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
-require('dotenv').config()
+require("dotenv").config();
 
 const express = require("express");
-const cookieParser = require('cookie-parser')
+const cookieParser = require("cookie-parser");
 const app = express();
-const db = require('./db')
+const db = require("./db");
 
-const authRoute = require('./routes/auth.route')
-const bookRoute = require('./routes/book.route')
-const userRoute = require('./routes/user.route')
-const cartRoute = require('./routes/cart.route')
-const transactionRoute = require('./routes/transaction.route')
-const authMiddleWare = require('./middleware/auth.middleware')
-const sessionMiddleWare = require('./middleware/session.middleware')
-const cartMiddleWare = require('./middleware/cart.middleware')
-const cookiesMiddleWare = require('./middleware/cookies.middleware')
+const mongoose = require("mongoose");
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+  })
+  .then(_ => console.log("MongoDB connected"))
+  .catch(err => console.log("MongoDB can't connect", err));
 
-app.set('view engine', 'pug')
-app.set('views', './views')
+const authRoute = require("./routes/auth.route");
+const bookRoute = require("./routes/book.route");
+const userRoute = require("./routes/user.route");
+const cartRoute = require("./routes/cart.route");
+const transactionRoute = require("./routes/transaction.route");
+const authMiddleWare = require("./middleware/auth.middleware");
+const sessionMiddleWare = require("./middleware/session.middleware");
+const cartMiddleWare = require("./middleware/cart.middleware");
+const cookiesMiddleWare = require("./middleware/cookies.middleware");
+const accountMiddleWare = require("./middleware/account.middleware");
+
+app.set("view engine", "pug");
+app.set("views", "./views");
 app.use(express.static("public"));
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(cookieParser(process.env.SESSION_SECRET))
-app.use(sessionMiddleWare.reqSession)
-
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(sessionMiddleWare.reqSession);
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
-app.use(cartMiddleWare.cart)
+app.use(cartMiddleWare.cart);
 
 // https://expressjs.com/en/starter/basic-routing.html
-app.get("/", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, (req, res) => {
-  res.cookie('user-id', 2626)
-  res.render("index.pug");
-});
+app.get(
+  "/",
+  authMiddleWare.requireAuth,
+  accountMiddleWare.isUser,
+  cookiesMiddleWare.countCookieRequest,
+  (req, res) => {
+    res.cookie("user-id", 2626);
+    res.render("index.pug");
+  }
+);
 
-app.use("/cart", cookiesMiddleWare.countCookieRequest, cartRoute)
-app.use("/auth", authRoute, cookiesMiddleWare.countCookieRequest, cookiesMiddleWare.countCookieRequest)
-app.use("/bookStore", cookiesMiddleWare.countCookieRequest, bookRoute)
-app.use("/users", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, userRoute)
-app.use("/transactions", authMiddleWare.requireAuth, cookiesMiddleWare.countCookieRequest, transactionRoute)
+app.use(
+  "/cart",
+  cookiesMiddleWare.countCookieRequest,
+  accountMiddleWare.isUser,
+  cartRoute
+);
+app.use(
+  "/auth",
+  authRoute,
+  accountMiddleWare.isUser,
+  cookiesMiddleWare.countCookieRequest
+);
+app.use(
+  "/bookStore",
+  cookiesMiddleWare.countCookieRequest,
+  accountMiddleWare.isUser,
+  accountMiddleWare.isAdmin,
+  bookRoute
+);
+app.use(
+  "/users",
+  authMiddleWare.requireAuth,
+  accountMiddleWare.isAdmin,
+  accountMiddleWare.isUser,
+  cookiesMiddleWare.countCookieRequest,
+  userRoute
+);
+app.use(
+  "/transactions",
+  authMiddleWare.requireAuth,
+  cookiesMiddleWare.countCookieRequest,
+  transactionRoute
+);
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, () => {

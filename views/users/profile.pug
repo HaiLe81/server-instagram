@@ -2,9 +2,8 @@ extends ../layout/layout.pug
 
 block cdn-bootstrap
 
-  h1 Update User
-  
-    img(style="width:50px; height:50px", src=`${user.avatarUrl !== undefined ? user.avatarUrl : 'https://i.ya-webdesign.com/images/default-avatar-png-18.png'}`)
+  div.wrapper
+    img.avatar.img-fluid.rounded-circle(src=`${user.avatarUrl}`)
 
   form(action="", method="POST", enctype="multipart/form-data")
     .form-group

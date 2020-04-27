@@ -1,11 +1,13 @@
 const db = require("../db");
 const shortid = require("shortid");
+var User = require("../model/user.model");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 module.exports = {
   login: (req, res) => {
     try {
       res.render("./auth/auth.pug", {
-        errors: [],
         values: req.body
       });
     } catch (err) {

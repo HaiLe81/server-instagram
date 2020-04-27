@@ -1,8 +1,9 @@
 var cloudinary = require("cloudinary").v2;
 // const md5 = require("md5");
-const db = require("../db");
-const bcrypt = require("bcrypt");
 const shortid = require("shortid");
+var User = require("../model/user.model");
+const fs = require("fs");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 cloudinary.config({
@@ -12,43 +13,44 @@ cloudinary.config({
 });
 
 module.exports = {
-  index: (req, res) => {
+  index: async (req, res) => {
     try {
+      // const user = new User({name: 'xxx'})
+      // await user.save()
+      const users = await User.find({});
       res.render("./users/user.pug", {
-        listUser: db.get("listUser").value()
+        listUser: users
       });
     } catch (err) {
       console.log(err);
     }
   },
-  search: (req, res) => {
+  search: async (req, res) => {
     try {
       var valueSearch = "";
       var q = req.query.q;
       valueSearch = q;
-      var matchedTodos = db
-        .get("listUser")
-        .value()
-        .filter(item => {
+      await User.find().then(doc => {
+        const matchedTodos = doc.filter(item => {
           return item.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
         });
-      res.render("./users/user.pug", {
-        listUser: matchedTodos,
-        value: valueSearch
+        res.render("./users/user.pug", {
+          listUser: matchedTodos,
+          value: valueSearch
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
-  view: (req, res) => {
+  view: async (req, res) => {
     try {
       const id = req.params.id;
-      const user = db
-        .get("listUser")
-        .find({ id: id })
-        .value();
-      res.render("./users/viewUser.pug", {
-        user: user
+
+      await User.findOne({ id: id }).then(doc => {
+        res.render("./users/viewUser.pug", {
+          user: doc
+        });
       });
     } catch (err) {
       console.log(err);
@@ -61,100 +63,137 @@ module.exports = {
       console.log(err);
     }
   },
-  createPost: (req, res) => {
+  createPost: async (req, res) => {
     try {
       const id = shortid.generate();
       const userInput = req.body.name;
-      bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-        db.get("listUser")
-          .push({
-            id: id,
-            name: req.body.name,
-            email: req.body.email,
-            password: hash
-          })
-          .write();
+      await bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+        const newUser = new User({
+          id: id,
+          name: req.body.name,
+          email: req.body.email,
+          password: hash
+        });
+        newUser.save();
       });
       res.redirect("/users/");
     } catch (err) {
       console.log(err);
     }
   },
-  delete: (req, res) => {
+  delete: async (req, res) => {
     try {
-      // let id = parseInt(req.params.id);
       let id = req.params.id;
-      db.get("listUser")
-        .remove({ id: id })
-        .write();
+      if (!id) throw new Error("not found");
+      await User.deleteOne({ id: id });
       res.redirect("/users/");
     } catch (err) {
       console.log(err);
     }
   },
-  edit: (req, res) => {
+  edit: async (req, res) => {
     try {
       const id = req.params.id;
-      const user = db
-        .get("listUser")
-        .find({ id: id })
-        .value();
-      console.log("user", user);
+
+      if (!id) return res.send("Invalid id");
+
+      const userItem = await User.find({ id: id });
       res.render("./users/editUser.pug", {
-        user: user,
+        user: userItem[0],
         id: id
       });
     } catch (err) {
       console.log(err);
     }
   },
-  editPost: (req, res) => {
+  editPost: async (req, res) => {
+    var errors = [];
+    var id = req.params.id;
+    var name = req.body.name;
+    name.trim();
     try {
       // let id = parseInt(req.params.id);
-      console.log("body1", req.body);
+      const user = await User.findOne({ id: id });
+      console.log("user", user);
+      if (!user) {
+        errors.push("opps! Please try again");
+      }
+      if (user.name === name) {
+        errors.push("name already exists, please try another name");
+      }
 
-      let id = req.params.id;
-      db.get("listUser")
-        .find({ id: id })
-        .assign({ name: req.body.name })
-        .write();
-      res.redirect("/users/");
+      if (errors.length > 0) {
+        const userItem = await User.find({ id: id });
+        res.render("./users/editUser.pug", {
+          user: userItem[0],
+          id: id,
+          errors: errors
+        });
+      } else {
+        user.name = name;
+        await user.save();
+        res.redirect("/users/");
+      }
     } catch (err) {
       console.log(err);
     }
   },
-  profile: (req, res) => {
+  profile: async (req, res) => {
     try {
       const id = req.signedCookies.userId;
-      const user = db
-        .get("listUser")
-        .find({ id: id })
-        .value();
-      res.render("./users/profile.pug", {
-        user: user
+      await User.find({ id: id }).then(doc => {
+        res.render("./users/profile.pug", {
+          user: doc[0]
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
   postProfile: async (req, res) => {
+    var errors = [];
     try {
       const id = req.signedCookies.userId;
-      const file = req.file.path;
-      const path = await cloudinary.uploader
-        .upload(file)
-        .then(result => result.url)
-        .catch(error => console.log("erro:::>", error));
-      db.get("listUser")
-        .find({ id: id })
-        .assign({
-          name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
-          avatarUrl: path
-        })
-        .write();
-      res.redirect("/users/");
+      const name = req.body.name;
+      const email = req.body.email;
+      const password = req.body.password;
+      const user = await User.findOne({ id: id });
+
+      if (!user) {
+        errors.push("oops! Please try again");
+      }
+      if (!name) {
+        errors.push("Name is required!");
+      }
+      if (!email) {
+        errors.push("Email is required!");
+      }
+      if (errors.length > 0) {
+        await User.find({ id: id }).then(doc => {
+          console.log("doc", doc[0]);
+          res.render("./users/profile.pug", {
+            user: doc[0],
+            errors: errors
+          });
+        });
+      } else {
+        const file = req.file.path;
+        // if(!file)  path = 'https://i.ya-webdesign.com/images/default-avatar-png-18.png'
+        var path = await cloudinary.uploader
+          .upload(file)
+          .then(result => result.url)
+          .catch(error => console.log("erro:::>", error));
+        await bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+          user.name = name;
+          user.email = email;
+          user.password = hash;
+          user.avatarUrl = path;
+          user.save();
+        });
+
+        fs.unlinkSync(req.file.path);
+        res.redirect("/users/");
+      }
     } catch (err) {
       console.log(err);
     }

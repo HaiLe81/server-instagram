@@ -9,3 +9,15 @@
   top: 20px;
   left: 20px;
 }
+.rounded-circle {
+  height: 50px;
+  width: 50px;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+.avatar {
+  height: 150px;
+  width: 150px;
+}

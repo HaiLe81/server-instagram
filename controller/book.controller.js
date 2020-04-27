@@ -6,8 +6,12 @@ cloudinary.config({
   api_key: process.env.CLOUD_KEY,
   api_secret: process.env.CLOUD_SECRET
 });
+const fs = require("fs");
+
+var Book = require("../model/book.model");
+
 module.exports = {
-  index: (req, res) => {
+  index: async (req, res) => {
     try {
       let page = parseInt(req.query.page) || 1;
       let perPage = 3;
@@ -15,104 +19,123 @@ module.exports = {
       let start = (page - 1) * perPage;
       let end = page * perPage;
 
-      let dataBooks = db.get("listBooks").value();
+      // let dataBooks = db.get("listBooks").value();
 
-      let pageSize = Math.ceil(dataBooks.length / 3);
+      await Book.find().then(doc => {
+        let pageSize = Math.ceil(doc.length / 3);
 
-      let paginationSizes = pageSize >= 3 ? 3 : pageSize;
+        let paginationSizes = pageSize >= 3 ? 3 : pageSize;
 
-      let pageCurrent = parseInt(req.query.page);
-
-      res.render("books.pug", {
-        listBook: dataBooks.slice(start, end),
-        fullBook: dataBooks,
-        paginationSize: paginationSizes,
-        pageSize: pageSize,
-        page_Current: pageCurrent
+        let pageCurrent = parseInt(req.query.page);
+        res.render("books.pug", {
+          listBook: doc.slice(start, end),
+          fullBook: doc,
+          paginationSize: paginationSizes,
+          pageSize: pageSize,
+          page_Current: pageCurrent
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
-  search: (req, res) => {
+  search: async (req, res) => {
     try {
       var valueSearch = "";
       var q = req.query.q;
       valueSearch = q;
-      var matchedTodos = db
-        .get("listBooks")
-        .value()
-        .filter(item => {
+
+      await Book.find().then(doc => {
+        const matchedTodos = doc.filter(item => {
           return item.title.toLowerCase().indexOf(q.toLowerCase()) !== -1;
         });
-      res.render("books.pug", {
-        listBook: matchedTodos,
-        value: valueSearch
+        res.render("books.pug", {
+          listBook: matchedTodos,
+          value: valueSearch
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
-  view: (req, res) => {
+  view: async (req, res) => {
     try {
       const id = req.params.id;
-      const book = db
-        .get("listBooks")
-        .find({ id: id })
-        .value();
-      res.render("view.pug", {
-        book: book
+      await Book.find({ id: id }).then(doc => {
+        console.log("doc", doc);
+        res.render("view.pug", {
+          book: doc[0]
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
-  create: (request, response) => {
+  create: async (req, res) => {
     try {
-      response.render("create.pug");
+      res.render("create.pug");
     } catch (err) {
       console.log(err);
     }
   },
-  createPost: (req, res) => {
+  createPost: async (req, res) => {
     try {
+      const errors = [];
       const id = shortid.generate();
+      const file = req.file.path;
+      const title = req.body.title;
+      const description = req.body.description;
       // console.log('body', req.body)
-      db.get("listBooks")
-        .push({
-          id: id,
-          title: req.body.title,
-          description: req.body.description
-        })
-        .write();
+      const path = await cloudinary.uploader
+        .upload(file)
+        .then(result => result.url)
+        .catch(error => console.log("erro:::>", error));
+
+      // validate check lại
+      if (!title) {
+        errors.push("Title is required");
+      }
+      if (!description) {
+        errors.push("Description is required");
+      }
+      const newBook = new Book({
+        id: id,
+        title: title,
+        description: description,
+        coverUrl: path,
+        errors: errors
+      });
+      await newBook.save();
+      fs.unlinkSync(req.file.path);
+
       res.redirect("/bookStore/books");
     } catch (err) {
       console.log(err);
     }
   },
-  delete: (req, res) => {
+  delete: async (req, res) => {
     try {
       // let id = parseInt(req.params.id);
+
       let id = req.params.id;
-      db.get("listBooks")
-        .remove({ id: id })
-        .write();
+      if (!id) throw new Error("not found");
+      await Book.deleteOne({ id: id });
+
       res.redirect("/bookStore/books");
     } catch (err) {
       console.log(err);
     }
   },
-  edit: (req, res) => {
+  edit: async (req, res) => {
     try {
       const id = req.params.id;
-      const book = db
-        .get("listBooks")
-        .find({ id: id })
-        .value();
-      console.log("book", book);
-      res.render("edit.pug", {
-        book: book,
-        id: id
+
+      await Book.find({ id: id }).then(doc => {
+        console.log("doc[0]", doc[0]);
+        res.render("edit.pug", {
+          book: doc[0],
+          id: id
+        });
       });
     } catch (err) {
       console.log(err);
@@ -121,23 +144,40 @@ module.exports = {
   editPost: async (req, res) => {
     try {
       // let id = parseInt(req.params.id);
-      let id = req.params.id;
+      const errors = [];
+      const id = req.params.id;
+      const title = req.body.title;
+      const description = req.body.description;
 
-      const file = req.file.path;
-      const path = await cloudinary.uploader
-        .upload(file)
-        .then(result => result.url)
-        .catch(error => console.log("erro:::>", error));
+      var book = await Book.findOne({ id: id });
+      if (!title) {
+        errors.push("Title is required!");
+      }
+      if (!description) {
+        errors.push("Description is required!");
+      }
 
-      db.get("listBooks")
-        .find({ id: id })
-        .assign({
-          title: req.body.title,
-          description: req.body.description,
-          coverUrl: path
-        })
-        .write();
-      res.redirect("/bookStore/books");
+      if (errors.length > 0) {
+        await Book.find({ id: id }).then(doc => {
+          console.log("doc[0]", doc[0]);
+          res.render("edit.pug", {
+            book: doc[0],
+            id: id,
+            errors: errors
+          });
+        });
+      } else {
+        const file = req.file.path;
+        const path = await cloudinary.uploader
+          .upload(file)
+          .then(result => result.url)
+          .catch(error => console.log("erro:::>", error));
+        book.title = title;
+        book.description = description;
+        book.coverUrl = path;
+        await book.save();
+        res.redirect("/bookStore/books");
+      }
     } catch (err) {
       console.log(err);
     }
