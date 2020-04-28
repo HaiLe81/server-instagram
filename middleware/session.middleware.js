@@ -6,6 +6,7 @@ module.exports = {
     if (!req.signedCookies.sessionId) {
       const sessionId = shortid.generate();
       res.cookie("sessionId", sessionId, {
+        maxAge: 24 * 3600 * 1000,
         signed: true
       });
 

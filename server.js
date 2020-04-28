@@ -87,6 +87,7 @@ app.use(
 app.use(
   "/transactions",
   authMiddleWare.requireAuth,
+  accountMiddleWare.isUser,
   cookiesMiddleWare.countCookieRequest,
   transactionRoute
 );

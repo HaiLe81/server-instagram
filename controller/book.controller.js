@@ -1,5 +1,5 @@
 var cloudinary = require("cloudinary").v2;
-const db = require("../db");
+// const db = require("../db");
 const shortid = require("shortid");
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -159,7 +159,6 @@ module.exports = {
 
       if (errors.length > 0) {
         await Book.find({ id: id }).then(doc => {
-          console.log("doc[0]", doc[0]);
           res.render("edit.pug", {
             book: doc[0],
             id: id,
@@ -167,15 +166,21 @@ module.exports = {
           });
         });
       } else {
-        const file = req.file.path;
-        const path = await cloudinary.uploader
-          .upload(file)
-          .then(result => result.url)
-          .catch(error => console.log("erro:::>", error));
+        // const file = req.file.path;
+        var path;
+        !req.file
+          ? (path = "https://arm256.com/jspui/image/default-cover-item.jpg")
+          : (path = await cloudinary.uploader
+              .upload(req.file.path)
+              .then(result => result.url)
+              .catch(error => console.log("erro:::>", error)));
         book.title = title;
         book.description = description;
         book.coverUrl = path;
         await book.save();
+        if (req.file) {
+          fs.unlinkSync(req.file.path);
+        }
         res.redirect("/bookStore/books");
       }
     } catch (err) {

@@ -1,10 +1,10 @@
 var cloudinary = require("cloudinary").v2;
 // const md5 = require("md5");
 const shortid = require("shortid");
-var User = require("../model/user.model");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+var User = require("../model/user.model");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -15,11 +15,27 @@ cloudinary.config({
 module.exports = {
   index: async (req, res) => {
     try {
-      // const user = new User({name: 'xxx'})
-      // await user.save()
-      const users = await User.find({});
-      res.render("./users/user.pug", {
-        listUser: users
+      let page = parseInt(req.query.page) || 1;
+      let perPage = 3;
+
+      let start = (page - 1) * perPage;
+      let end = page * perPage;
+
+      // let dataBooks = db.get("listBooks").value();
+
+      await User.find().then(doc => {
+        let pageSize = Math.ceil(doc.length / 3);
+
+        let paginationSizes = pageSize >= 3 ? 3 : pageSize;
+
+        let pageCurrent = parseInt(req.query.page);
+        res.render("./users/user.pug", {
+          listUser: doc.slice(start, end),
+          fullUser: doc,
+          paginationSize: paginationSizes,
+          pageSize: pageSize,
+          page_Current: pageCurrent
+        });
       });
     } catch (err) {
       console.log(err);
@@ -177,12 +193,16 @@ module.exports = {
           });
         });
       } else {
-        const file = req.file.path;
-        // if(!file)  path = 'https://i.ya-webdesign.com/images/default-avatar-png-18.png'
-        var path = await cloudinary.uploader
-          .upload(file)
-          .then(result => result.url)
-          .catch(error => console.log("erro:::>", error));
+        // const file = req.file.path;
+        var path;
+        !req.file
+          ? (path =
+              "https://i.ya-webdesign.com/images/default-avatar-png-18.png")
+          : (path = await cloudinary.uploader
+              .upload(req.file.path)
+              .then(result => result.url)
+              .catch(error => console.log("erro:::>", error)));
+        
         await bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
           user.name = name;
           user.email = email;
@@ -190,8 +210,9 @@ module.exports = {
           user.avatarUrl = path;
           user.save();
         });
-
-        fs.unlinkSync(req.file.path);
+        if(req.file){
+          fs.unlinkSync(req.file.path);
+        }
         res.redirect("/users/");
       }
     } catch (err) {

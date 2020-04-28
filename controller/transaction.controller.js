@@ -1,126 +1,107 @@
-const db = require("../db");
 const shortid = require("shortid");
+var User = require("../model/user.model");
+var Transactions = require("../model/transactions.model");
+var Book = require("../model/book.model");
 
 module.exports = {
-  index: (req, res) => {
+  index: async (req, res) => {
     try {
       const idAccount = req.signedCookies.userId;
       let dataTransactions = [];
 
-      let page = parseInt(req.query.page) || 1;
-      let perPage = 3;
+      await User.findOne({ id: idAccount }).then(async doc => {
+        if (!doc.isAdmin) {
+          // not admin
+          await Transactions.find({ userId: idAccount }).then(x => {
+            dataTransactions = x;
+          });
+        } else {
+          // dataTransactions = db.get("transactions").value();
+          await Transactions.find().then(doc => {
+            dataTransactions = doc;
+          });
+          // console.log("tran1", dataTransactions);
+        }
+        // console.log("isAdmin", dataTransactions);
+        let page = parseInt(req.query.page) || 1;
+        let perPage = 3;
 
-      let start = (page - 1) * perPage;
-      let end = page * perPage;
-      
-      const dataAdmin = db
-        .get("listUser")
-        .find({ id: idAccount })
-        .value().isAdmin;
+        let start = (page - 1) * perPage;
+        let end = page * perPage;
+        let pageSize = Math.ceil(dataTransactions.length / 3);
 
-      if (dataAdmin === undefined || dataAdmin === false) {
-        dataTransactions = db
-          .get("transactions")
-          .filter({ userId: idAccount })
-          .value();
-      } else {
-        dataTransactions = db.get("transactions").value();
-      }
-
-      let pageSize = Math.ceil(dataTransactions.length/3)
-      
-      let paginationSizes = pageSize >= 3 ? 3 :  pageSize
-      
-      res.render("./transactions/transaction.pug", {
-        listTran: dataTransactions.slice(start, end),
-        fullListTran: dataTransactions,
-        dataUser: db.get("listUser").value(),
-        dataBook: db.get("listBooks").value(),
-        paginationSize: paginationSizes,
-        pageSize: pageSize
+        let paginationSizes = pageSize >= 3 ? 3 : pageSize;
+        User.find().then(dataUser => {
+          Book.find().then(databook => {
+            res.render("./transactions/transaction.pug", {
+              listTran: dataTransactions.slice(start, end),
+              fullListTran: dataTransactions,
+              dataUser: dataUser,
+              dataBook: databook,
+              paginationSize: paginationSizes,
+              pageSize: pageSize
+            });
+          });
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
-  create: (req, res) => {
+  create: async (req, res) => {
     try {
-      console.log("dbindex", db.get("transactions").value());
-      res.render("./transactions/create.pug", {
-        users: db.get("listUser").value(),
-        books: db.get("listBooks").value()
+      await User.find({}).then(async user => {
+        await Book.find({}).then(book => {
+          res.render("./transactions/create.pug", {
+            users: user,
+            books: book
+          });
+        });
       });
     } catch (err) {
       console.log(err);
     }
   },
-  createPost: (req, res) => {
+  createPost: async (req, res) => {
     try {
       const id = shortid.generate();
       const idUser = req.body.user;
       const idBook = req.body.book;
-      // let result = data.find(item => item.userId === idUser)
-      // console.log('result', result instanceof Array)
 
-      let data = db.get("transactions").value();
-      let result = data.find(item => {
-        item.userId === idUser;
+      await Transactions.findOne({ userId: idUser }).then(tran => {
+        if (!tran) {
+          let newTan = Transactions();
+          newTan.id = id;
+          newTan.userId = idUser;
+          newTan.bookId = idBook;
+          newTan.isComplete = false;
+          newTan.save();
+        } else {
+          tran.bookId = idBook;
+          tran.save();
+        }
       });
-
-      // need update code to can push addition listBook
-      // code below only change all listBook
-      if (result === "undefined") {
-        // not find userID
-        console.log("run here 1");
-        db.get("transactions")
-          .push({
-            id: id,
-            userId: idUser,
-            bookId: idBook,
-            isComplete: false
-          })
-          .write();
-      } else {
-        // need change here
-        // need fix error when choose one book
-        db.get("transactions")
-          .find({ userId: idUser })
-          .assign({ bookId: req.body.book })
-          .write();
-      }
+      res.redirect("/transactions/");
     } catch (err) {
       console.log(err);
     }
-    res.redirect("/transactions/");
   },
-  complete: (req, res) => {
+  complete: async (req, res) => {
     try {
+      const idAccount = req.signedCookies.userId;
+      let dataTransactions = [];
       const id = req.params.id;
-      const data = db.get("transactions").value();
-      const result = data.find(item => item.id === id);
-      var errors = [];
-      if (result === undefined) {
-        errors.push("Transaction not exist!!");
-      }
-      if (errors.length) {
-        res.render("./transactions/transaction.pug", {
-          listTran: db.get("transactions").value(),
-          dataUser: db.get("listUser").value(),
-          dataBook: db.get("listBooks").value(),
-          errors: errors
-        });
-        return;
-      }
 
-      db.get("transactions")
-        .find({ id: id })
-        .assign({ isComplete: true })
-        .write();
-
-      res.render("./transactions/transaction.pug", {
-        listTran: db.get("transactions").value(),
-        dataUser: db.get("listUser").value(),
-        dataBook: db.get("listBooks").value()
+      await Transactions.findOne({ id: id }).then(tran => {
+        console.log("tran", tran);
+        if (!tran.isComplete) {
+          // false => true
+          tran.isComplete = true;
+        } else {
+          tran.isComplete = false;
+        }
+        tran.save();
+        res.redirect("/transactions");
       });
     } catch (err) {
       console.log(err);

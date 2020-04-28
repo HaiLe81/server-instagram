@@ -1,144 +1,139 @@
-var _ = require("lodash");
-const db = require("../db");
 const shortid = require("shortid");
+var Book = require("../model/book.model");
+var User = require("../model/user.model");
+var Sessions = require("../model/sessions.model");
+var Transactions = require("../model/transactions.model");
 
 module.exports = {
-  index: (req, res) => {
-    const dataBook = db.get("listBooks").value();
-    res.render("./cart/cart.pug", {
-      dataBook: dataBook
+  index: async (req, res) => {
+    const { sessionId } = req.signedCookies;
+
+    let page = parseInt(req.query.page) || 1;
+    let perPage = 3;
+
+    let start = (page - 1) * perPage;
+    let end = page * perPage;
+
+    // let dataBooks = db.get("listBooks").value();
+
+    await Sessions.find().then(async doc => {
+      let pageSize = Math.ceil(doc[0].cart.length / 3);
+      let paginationSizes = pageSize >= 3 ? 3 : pageSize;
+
+      let pageCurrent = parseInt(req.query.page);
+      await Book.find().then(book => {
+        res.render("./cart/cart.pug", {
+          dataCart: doc[0].cart.slice(start, end),
+          fullCart: doc[0].cart,
+          paginationSize: paginationSizes,
+          pageSize: pageSize,
+          page_Current: pageCurrent,
+          dataBook: book
+        });
+      });
     });
+
   },
   addToCart: (req, res) => {
     try {
-      const bookId = req.params.bookId;
-      const sessionId = req.signedCookies.sessionId;
+      const { bookId } = req.params;
+      const { sessionId } = req.signedCookies;
 
       if (!sessionId) {
         res.redirect("/bookStore/books");
         return;
       }
-
-      var count = db
-        .get("sessions")
-        .find({ id: sessionId })
-        .get("cart." + bookId, 0)
-        .value();
-
-      db.get("sessions")
-        .find({ id: sessionId })
-        .set("cart." + bookId, count + 1)
-        .write();
-
-      let page = parseInt(req.query.page) || 1;
-      let perPage = 3;
-
-      let start = (page - 1) * perPage;
-      let end = page * perPage;
-
-      let dataBooks = db.get("listBooks").value();
-
-      let pageSize = Math.ceil(dataBooks.length / 3);
-
-      let paginationSizes = pageSize >= 3 ? 3 : pageSize;
-
-      let pageCurrent = parseInt(req.query.page);
-
-      res.render("books.pug", {
-        listBook: dataBooks.slice(start, end),
-        fullBook: dataBooks,
-        paginationSize: paginationSizes,
-        pageSize: pageSize,
-        page_Current: pageCurrent
+      // find by sessionId
+      Sessions.findOne({ id: sessionId }, async function(err, doc) {
+        if (err) {
+          console.log(err);
+        }
+        if (!doc) {
+          let newSes = new Sessions();
+          newSes.id = sessionId;
+          newSes.cart = [{ bookId: bookId, count: 1 }];
+          await newSes.save();
+        } else {
+          let listCart = doc.cart;
+          // found bookId
+          let index = listCart.findIndex(x => x.bookId === bookId);
+          // not found
+          if (index !== -1) {
+            listCart[index].count += 1;
+          } else {
+            listCart.push({ bookId: bookId, count: 1 });
+          }
+          doc.save();
+        }
       });
-      // res.redirec("/booksStore/books");
+      res.redirect("/bookStore/books");
     } catch (err) {
       console.log(err);
     }
   },
-  delete: (req, res) => {
+  delete: async (req, res) => {
     const id = req.signedCookies.sessionId;
     const idBook = req.params.bookId;
-    console.log("idBook", idBook);
-    // get object have id: sessionId
-    let object = db
-      .get("sessions")
-      .find({ id: id })
-      .value();
 
-    console.log("object", object);
-    // use lodash get data in cart
+    await Sessions.find({ id: id }).then(doc => {
+      let listCart = doc[0].cart;
+      const index = listCart.findIndex(x => x.bookId === idBook);
+      let a = (listCart[index].count -= 1);
 
-    if (object) {
-      let shallowCart = JSON.parse(JSON.stringify(object));
-      console.log("aaaaa", shallowCart.cart);
-      shallowCart.cart[`${idBook}`]--;
-      console.log(shallowCart);
-      if(shallowCart.cart[`${idBook}`] === 0) {
-        delete shallowCart.cart[`${idBook}`]
+      if (a === 0) {
+        delete doc[0].cart[index];
       }
+      doc[0].save();
+    });
 
-      db.get("sessions")
-      .find({ id: id })
-      .assign(shallowCart)
-      .write()
-    }
-    
     res.redirect("/cart");
   },
-  postCart: (req, res) => {
+  postCart: async (req, res) => {
     try {
-      const id = req.signedCookies.sessionId;
+      const id = shortid.generate();
+      const { sessionId } = req.signedCookies;
       const userId = req.signedCookies.userId;
       const idTranSactions = shortid.generate();
       var notifi = [];
       // check has user login
-      const user = db
-        .get("listUser")
-        .find({ id: userId })
-        .value();
-      if (!user) {
-        notifi.push("You need to be logged in to perform this operation");
-      } else {
-        // get values of cart need add to transactions
-        const dataBook = db
-          .get("sessions")
-          .find({ id: id })
-          .value();
-        const checkUser = db
-          .get("transactions")
-          .find({ userId: userId })
-          .value();
-        const valuesArr = Object.keys(dataBook.cart);
-        // check transactions has user?
-        if (!checkUser) {
-          // add transactions with userId
-          db.get("transactions")
-            .push({
-              id: idTranSactions,
-              userId: userId,
-              bookId: valuesArr,
-              isComplete: false
-            })
-            .write();
+      // const user = db
+      //   .get("listUser")
+      //   .find({ id: userId })
+      //   .value();
+      await User.find({ id: userId }).then(async user => {
+        console.log("user", !user);
+        if (!user[0]) {
+          notifi.push("You need to be logged in to perform this operation");
         } else {
-          db.get("transactions")
-            .find({ userId: userId })
-            .assign({
-              bookId: valuesArr
-            })
-            .write();
+          await Sessions.findOne({ id: sessionId }).then(async session => {
+            await Transactions.find({ userId: userId }).then(tran => {
+              let listBookId = session.cart.map(x => x.bookId);
+              if (!tran[0]) {
+                tran[0].id = id;
+                tran[0].userId = userId;
+                tran[0].isComplete = false;
+                tran[0].bookId = listBookId;
+              } else {
+                tran[0].bookId = listBookId;
+              }
+              tran[0].save();
+            });
+          });
         }
-      }
+      });
       if (notifi.length > 0) {
-        const dataBook = db.get("listBooks").value();
-        res.render("./cart/cart.pug", {
-          dataBook: dataBook,
-          notifi: notifi
+        Sessions.find({ id: sessionId }).then(doc => {
+          //get data book from collection"listBooks"
+          Book.find().then(book => {
+            res.render("./cart/cart.pug", {
+              dataBook: book,
+              dataCart: doc[0].cart,
+              notifi: notifi
+            });
+          });
         });
       } else {
-        console.log("db:>", db.get("transactions").value());
-        res.redirect("/bookStore/books");
+        res.redirect("/cart/");
       }
     } catch (err) {
       console.log(err);
