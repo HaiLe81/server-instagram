@@ -33,30 +33,7 @@ module.exports = {
         res.cookie("count", count);
       }
       console.log(`count: ${count} 1`);
-
-      // check isAdmin
-      const idUser = req.signedCookies.userId;
-      // console.log('idUser', idUser)
-      if (!idUser) {
-        res.locals.isAdmin = false;
-      } else {
-        const isAdmin = User.find({ id: idUser }).then(doc => {
-          if (!doc[0].isAdmin) {
-            res.locals.isAdmin = false;
-          } else {
-            res.locals.isAdmin = true;
-          }
-        });
-      }
-
-//       // isUser
-//       const user = db
-//         .get("listUser")
-//         .find({ id: req.signedCookies.userId })
-//         .value();
-
-//       res.locals.user = user;
-//       // console.log('userMid', user)
+      
       next();
     } catch (err) {
       console.log(err);

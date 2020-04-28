@@ -39,6 +39,7 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(sessionMiddleWare.reqSession);
+app.use(cookiesMiddleWare.countCookieRequest);
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
@@ -50,7 +51,7 @@ app.get(
   "/",
   authMiddleWare.requireAuth,
   accountMiddleWare.isUser,
-  cookiesMiddleWare.countCookieRequest,
+
   (req, res) => {
     res.cookie("user-id", 2626);
     res.render("index.pug");
@@ -59,7 +60,7 @@ app.get(
 
 app.use(
   "/cart",
-  cookiesMiddleWare.countCookieRequest,
+
   accountMiddleWare.isUser,
   cartRoute
 );
@@ -71,7 +72,7 @@ app.use(
 );
 app.use(
   "/bookStore",
-  cookiesMiddleWare.countCookieRequest,
+
   accountMiddleWare.isUser,
   accountMiddleWare.isAdmin,
   bookRoute
@@ -81,14 +82,14 @@ app.use(
   authMiddleWare.requireAuth,
   accountMiddleWare.isAdmin,
   accountMiddleWare.isUser,
-  cookiesMiddleWare.countCookieRequest,
+
   userRoute
 );
 app.use(
   "/transactions",
   authMiddleWare.requireAuth,
   accountMiddleWare.isUser,
-  cookiesMiddleWare.countCookieRequest,
+
   transactionRoute
 );
 
