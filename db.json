@@ -37,7 +37,7 @@
       "isAdmin": true,
       "wrongLoginCount": 0,
       "avatar": "http://res.cloudinary.com/hai-le/image/upload/v1587742445/f0r4icmw177mhyfrg9tx.png",
-      "avatarUrl": "http://res.cloudinary.com/hai-le/image/upload/v1587742636/mkbwbb2c9iwvnwwlxyhj.png"
+      "avatarUrl": "http://res.cloudinary.com/hai-le/image/upload/v1587985463/uqbgmixtkcag44asxtrc.png"
     },
     {
       "id": "as89jk13p",
@@ -58,7 +58,8 @@
       "name": "Pham Thi Thanh",
       "email": "PhamThiThanh@gmail.com",
       "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
-      "wrongLoginCount": 0
+      "wrongLoginCount": 0,
+      "avatarUrl": "http://res.cloudinary.com/hai-le/image/upload/v1588003984/dawb676wbl4c50yhm3nh.png"
     }
   ],
   "transactions": [
@@ -129,6 +130,24 @@
     },
     {
       "id": "Bbbz00fBY"
+    },
+    {
+      "id": "zGmNkAcoR"
+    },
+    {
+      "id": "q6uEEa7uO"
+    },
+    {
+      "id": "uPZAbEtiu"
+    },
+    {
+      "id": "sRZoYgT3L"
+    },
+    {
+      "id": "FZZfmk4nd"
+    },
+    {
+      "id": "dgQTGgJz6"
     }
   ]
 }

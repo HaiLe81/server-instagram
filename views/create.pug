@@ -4,14 +4,18 @@ block cdn-bootstrap
 
   h2 Create Book
 
-  form(action="/bookStore/books/create", method="POST")
+  form(action="/bookStore/books/create", method="POST", enctype="multipart/form-data")
     div.form-group
       label Title
       br
-      input(class="form-control" ,name="title", type="text")
+      input(class="form-control" , name="title", type="text")
       br
       label Description
       br
-      input(class="form-control" ,name="description", type="text")
+      input(class="form-control" , name="description", type="text")
+      br
+      labe(for="bookCover") Book Cover
+      br
+      input#bookCover.form-control-file(name="bookCover", type="file")
       br
       button(type="submit", class="btn btn-primary") Create
