@@ -23,19 +23,19 @@ block cdn-bootstrap
             td= dataUser.find(x => x.id === item.userId).name
             td
               ul
-                - let listId = item.bookId
-                if (typeof listId === "string")
-                  li= dataBook.find(item => item.id === listId).title
+                - let listIdBook = item.bookId
+                if(typeof listIdBook === "String")
+                  li= dataBook.find(item => item.id === e).title
                 else
-                  each val in listId
-                    li= dataBook.find(item => item.id === val).title
+                  each e in listIdBook
+                    li= dataBook.find(item => item.id === e).title
             td
               if(item.isComplete === false)
                 span &nbsp &nbsp
                 a.btn.btn-light(href=`/transactions/${item.id}/complete`) Hoàn Thành
               else
                 span &nbsp &nbsp
-                a.btn.btn-light(href="#") Đang Mượn
+                a.btn.btn-light(href=`/transactions/${item.id}/complete`) Đang Mượn
   nav(aria-label='Page navigation example')
         ul.pagination.justify-content-end#myNavi
           - let index = 1;

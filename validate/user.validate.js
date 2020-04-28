@@ -1,5 +1,6 @@
 const md5 = require("md5");
-const db = require("../db");
+// const db = require("../db");
+var User = require("../model/user.model");
 
 module.exports = {
   postCreate: (req, res, next) => {
@@ -7,7 +8,10 @@ module.exports = {
     const nameInput = req.body.name;
     const emailInput = req.body.email;
     const passwordInput = req.body.password;
-    const data = db.get("listUser").value();
+    
+    // get data from collection "listUser"
+    const data = User.find()
+    // const data = db.get("listUser").value();
     const resultFindName = data.find(item => item.name === nameInput);
     const resultFindEmail = data.find(item => item.email === emailInput);
     // check null username 

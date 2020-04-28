@@ -35,8 +35,7 @@
       "email": "lekhachai9999@gmail.com",
       "password": "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
       "isAdmin": true,
-      "wrongLoginCount": 0,
-      "avatar": "http://res.cloudinary.com/hai-le/image/upload/v1587742445/f0r4icmw177mhyfrg9tx.png",
+      "wrongLoginCount": 1,
       "avatarUrl": "http://res.cloudinary.com/hai-le/image/upload/v1587985463/uqbgmixtkcag44asxtrc.png"
     },
     {
@@ -148,6 +147,21 @@
     },
     {
       "id": "dgQTGgJz6"
+    },
+    {
+      "id": "NlsdNT7s8"
+    },
+    {
+      "id": "26zeeZoTF"
+    },
+    {
+      "id": "98lVZYFCL"
+    },
+    {
+      "id": "NgwrgwPC0"
+    },
+    {
+      "id": "znJAv64d7"
     }
   ]
 }

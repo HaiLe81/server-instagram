@@ -1,4 +1,3 @@
-const db = require("../db");
 const shortid = require("shortid");
 var User = require("../model/user.model");
 const bcrypt = require("bcrypt");
@@ -14,17 +13,19 @@ module.exports = {
       console.log(err);
     }
   },
-  postLogin: (req, res) => {
-    const email = req.body.email;
-    const user = db
-      .get("listUser")
-      .find({ email: email })
-      .value();
-    // pass userId = user.id
-    res.cookie("userId", user.id, {
-      signed: true
-    });
-    res.redirect("/users");
+  postLogin: async (req, res) => {
+    try {
+      const email = req.body.email;
+      await User.find({ email: email }).then(doc => {
+        // pass userId = user.id
+        res.cookie("userId", doc[0].id, {
+          signed: true
+        });
+        res.redirect("/users");
+      });
+    } catch (err) {
+      console.log(err);
+    }
   },
   postLogOut: (req, res) => {
     res.clearCookie("userId", {
