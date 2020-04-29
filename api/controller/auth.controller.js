@@ -62,9 +62,9 @@ module.exports = {
     } catch({ message = "Invalid request" }){
       res.status(400).json({ message })
     }
-    res.clearCookie("userId", {
-      path: "/"
-    });
-    res.redirect("/auth/login");
+    // res.clearCookie("userId", {
+    //   path: "/"
+    // });
+    // res.redirect("/auth/login");
   }
 };
