@@ -25,6 +25,9 @@ const authRoute = require("./routes/auth.route");
 const bookRoute = require("./routes/book.route");
 const userRoute = require("./routes/user.route");
 const cartRoute = require("./routes/cart.route");
+//api
+const authApiRoutes = require("./api/routes/auth.route")
+
 const transactionRoute = require("./routes/transaction.route");
 const authMiddleWare = require("./middleware/auth.middleware");
 const sessionMiddleWare = require("./middleware/session.middleware");
@@ -46,6 +49,8 @@ app.use(cookiesMiddleWare.countCookieRequest);
 app.use(express.static("public"));
 app.use(cartMiddleWare.cart);
 
+
+
 // https://expressjs.com/en/starter/basic-routing.html
 app.get(
   "/",
@@ -57,6 +62,9 @@ app.get(
     res.render("index.pug");
   }
 );
+
+// api mobile
+app.use("/api/v1/auth", authApiRoutes)
 
 app.use(
   "/cart",
