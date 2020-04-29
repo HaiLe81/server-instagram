@@ -6,7 +6,6 @@ var User = require("../model/user.model");
 module.exports = {
   isAdmin: (req, res, next) => {
     try {
-
       // check isAdmin
       const idUser = req.signedCookies.userId;
       // console.log('idUser', idUser)
@@ -27,14 +26,11 @@ module.exports = {
     }
   },
   isUser: (req, res, next) => {
-     // isUser
-      const user = db
-        .get("listUser")
-        .find({ id: req.signedCookies.userId })
-        .value();
-
-      res.locals.user = user;
-      // console.log('userMid', user)
-    next()
+    // isUser
+    User.find({ id: req.signedCookies.userId }).then(user => {
+      res.locals.user = user[0];
+      console.log('user', user[0])
+    });
+    next();
   }
 };

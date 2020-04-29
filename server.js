@@ -28,6 +28,8 @@ const cartRoute = require("./routes/cart.route");
 //api
 const authApiRoutes = require("./api/routes/auth.route")
 const transactionsApiRoutes = require("./api/routes/transactions.route")
+const usersApiRoutes = require("./api/routes/user.route")
+const bookApiRoutes = require("./api/routes/book.route")
 
 const transactionRoute = require("./routes/transaction.route");
 const authMiddleWare = require("./middleware/auth.middleware");
@@ -51,26 +53,25 @@ app.use(express.static("public"));
 app.use(cartMiddleWare.cart);
 
 
+// api mobile
+app.use("/api/v1/auth", authApiRoutes)
+app.use("/api/v1/transactions", transactionsApiRoutes)
+app.use("/api/v1/users", usersApiRoutes)
+app.use("/api/v1/books", bookApiRoutes)
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get(
   "/",
   authMiddleWare.requireAuth,
   accountMiddleWare.isUser,
-
   (req, res) => {
     res.cookie("user-id", 2626);
     res.render("index.pug");
   }
 );
 
-// api mobile
-app.use("/api/v1/auth", authApiRoutes)
-app.use("/api/v1/transactions", transactionsApiRoutes)
-
 app.use(
   "/cart",
-
   accountMiddleWare.isUser,
   cartRoute
 );
@@ -99,7 +100,6 @@ app.use(
   "/transactions",
   authMiddleWare.requireAuth,
   accountMiddleWare.isUser,
-
   transactionRoute
 );
 
