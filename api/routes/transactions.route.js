@@ -5,10 +5,8 @@ const tranController = require('../controller/transaction.controller')
 
 router.get("/", tranController.index);
 
-// router.get("/create", tranController.create);
+router.post("/", tranController.createPost);
 
-// router.post("/create", tranController.createPost);
-
-// router.get("/:id/complete", tranController.complete)
+router.patch("/:id", tranController.complete);
 
 module.exports = router;
