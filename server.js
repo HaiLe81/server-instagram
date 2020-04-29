@@ -27,6 +27,7 @@ const userRoute = require("./routes/user.route");
 const cartRoute = require("./routes/cart.route");
 //api
 const authApiRoutes = require("./api/routes/auth.route")
+const transactionsApiRoutes = require("./api/routes/transactions.route")
 
 const transactionRoute = require("./routes/transaction.route");
 const authMiddleWare = require("./middleware/auth.middleware");
@@ -65,6 +66,7 @@ app.get(
 
 // api mobile
 app.use("/api/v1/auth", authApiRoutes)
+app.use("/api/v1/transactions", transactionsApiRoutes)
 
 app.use(
   "/cart",
