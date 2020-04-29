@@ -8,7 +8,7 @@ const validate = require('../validate/auth.login.validate.js')
 
 router.get('/login', authController.login)
 
-router.post('/login', validate.postCreate, authController.postLogin)
+router.post('/login', validate.login, authController.postLogin)
 
 router.get('/logout', authController.postLogOut)
 

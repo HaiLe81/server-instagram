@@ -1,21 +1,20 @@
-const md5 = require("md5"); //md5 is third party libraries so must declare first
 const sgMail = require("@sendgrid/mail");
-const db = require("../db");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 var User = require("../model/user.model");
 
 module.exports = {
-  postCreate: async (req, res, next) => {
+  login: async (req, res, next) => {
     try {
       var errors = [];
-      const email = req.body.email;
-      const password = req.body.password;
+      const { email, password } = req.body;
+      
       const users = await User.find();
       // find user
       const user = users.find(item => item.email === email);
 
       if (!user) {
+        throw ('User does not exist')
         errors.push("User does not exist.");
       } else {
         let countWrongPassword = user.wrongLoginCount;
