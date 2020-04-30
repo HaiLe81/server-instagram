@@ -5,7 +5,7 @@
     "url" : "https://virtserver.swaggerhub.com/HaiLe81/crud-list-book/1.0.0"
   }, {
     "description" : "BookStore API for dev",
-    "url" : "https://crud-list-book.glitch.me/api/v1/"
+    "url" : "https://crud-list-book.glitch.me/api/v1"
   } ],
   "info" : {
     "description" : "This is a simple API",
@@ -27,9 +27,6 @@
   }, {
     "name" : "transactions",
     "description" : "Access to transactions of store"
-  }, {
-    "name" : "profile",
-    "description" : "Operations about profile of user"
   } ],
   "paths" : {
     "/auth/login" : {
@@ -71,6 +68,517 @@
                   "properties" : {
                     "user" : {
                       "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    },
+    "/books/" : {
+      "get" : {
+        "tags" : [ "books" ],
+        "summary" : "get book list",
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/Book"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "books" ],
+        "summary" : "add new book",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "title", "description" ],
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "email" : "example@gmail.com",
+                  "password" : "123123"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    },
+    "/books/{id}" : {
+      "get" : {
+        "tags" : [ "books" ],
+        "summary" : "get book by id",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/Book"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "books" ],
+        "summary" : "delete user by id",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/Book"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "books" ],
+        "summary" : "update user by id",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "title", "description" ],
+                "properties" : {
+                  "title" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "title" : "Bý kíp Susan Thầy Giáo Ba",
+                  "description" : "Coi stream cùng thầy giáo ba"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    },
+    "/users/" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "get user list",
+        "operationId" : "get users",
+        "description" : "Get data list user\n",
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "users" ],
+        "summary" : "add new user",
+        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name", "email", "password" ],
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "name" : "Tú Trẻ Trâu",
+                  "email" : "example@gmail.com",
+                  "password" : "123123"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    },
+    "/users/{id}" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "get user by id",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "users" ],
+        "summary" : "delete user by id",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "users" ],
+        "summary" : "update user by id",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name", "email", "password" ],
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "name" : "Nguyễn Ngọc Cảnh",
+                  "email" : "nguyenngoccanh122@gmail.com",
+                  "password" : "123123"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    },
+    "/transactions/" : {
+      "get" : {
+        "tags" : [ "transactions" ],
+        "summary" : "get transaction list",
+        "operationId" : "get transactions",
+        "description" : "Get data list transaction\n",
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/Transactions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "transactions" ],
+        "summary" : "add a transaction to list",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "user", "book" ],
+                "properties" : {
+                  "user" : {
+                    "type" : "string"
+                  },
+                  "book" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  }
+                },
+                "example" : {
+                  "user" : "as89jk53p",
+                  "book" : [ "o5ovrRBSQ", "7igJwFaJN", "7b4fkQjkJ" ]
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    },
+    "/transactions/{id}" : {
+      "patch" : {
+        "tags" : [ "transactions" ],
+        "summary" : "Change status of transaction",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/Transactions"
                     }
                   }
                 }
@@ -155,34 +663,11 @@
             "example" : "userac001"
           },
           "bookId" : {
-            "type" : "string",
-            "example" : "book001"
-          }
-        }
-      },
-      "Sessions" : {
-        "type" : "object",
-        "required" : [ "id", "cart" ],
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "example" : "session01"
-          },
-          "cart" : {
             "type" : "array",
             "items" : {
-              "type" : "object",
-              "properties" : {
-                "bookId" : {
-                  "type" : "string",
-                  "example" : "book001"
-                },
-                "count" : {
-                  "type" : "number",
-                  "example" : 2
-                }
-              }
-            }
+              "type" : "string"
+            },
+            "example" : [ "book01", "book02" ]
           }
         }
       }

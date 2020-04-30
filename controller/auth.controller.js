@@ -5,16 +5,14 @@ const saltRounds = 10;
 
 module.exports = {
   login: (req, res) => {
-    try {
-      res.render("./auth/auth.pug", {
-        values: req.body
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    res.render("./auth/auth.pug", {
+      values: req.body
+    });
   },
-  postLogin: async (req, res) => {
+  postLogin: async (req, res, next) => {
     try {
+      // var a;
+      // a.v();
       const email = req.body.email;
       await User.find({ email: email }).then(doc => {
         // pass userId = user.id
@@ -24,7 +22,8 @@ module.exports = {
         res.redirect("/users");
       });
     } catch (err) {
-      console.log(err);
+      // console.log(err);
+      next(err);
     }
   },
   postLogOut: (req, res) => {

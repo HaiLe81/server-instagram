@@ -112,9 +112,7 @@ module.exports = {
   postCart: async (req, res, next) => {
     try {
       const id = shortid.generate();
-      const { sessionId } = req.signedCookies;
-      const userId = req.signedCookies.userId;
-      const idTranSactions = shortid.generate();
+      const { sessionId,userId } = req.signedCookies;
       var notifi = [];
       await User.find({ id: userId }).then(async user => {
         if (!user[0]) {
@@ -122,16 +120,21 @@ module.exports = {
         } else {
           await Sessions.findOne({ id: sessionId }).then(async session => {
             await Transactions.find({ userId: userId }).then(tran => {
+              console.log('tran', !tran)
               let listBookId = session.cart.map(x => x.bookId);
-              if (!tran[0]) {
-                tran[0].id = id;
-                tran[0].userId = userId;
-                tran[0].isComplete = false;
-                tran[0].bookId = listBookId;
+              if (tran) {
+                console.log('not found')
+                const tran = new Transactions();
+                tran.id = id;
+                tran.userId = userId;
+                tran.isComplete = false;
+                tran.bookId = listBookId;
+                tran.save();
               } else {
+                console.log('found')
                 tran[0].bookId = listBookId;
+                tran[0].save();
               }
-              tran[0].save();
             });
           });
         }

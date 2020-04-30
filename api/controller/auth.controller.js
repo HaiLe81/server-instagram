@@ -9,11 +9,11 @@ module.exports = {
     const { email, password } = req.body;
     try {
       if (!email || !password) {
-        throw "email or passwrod incorect!";
+        throw new Error("email or passwrod incorect!");
       }
       const user = await User.findOne({ email });
       if (!user) {
-        throw "email or password incorect!";
+        throw new Error("email or password incorect!");
       }
       let countWrongPassword = user.wrongLoginCount;
       if (countWrongPassword > 3) {

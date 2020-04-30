@@ -4,23 +4,27 @@ var multer = require("multer");
 var upload = multer({ dest: "./public/uploads/" });
 const bookController = require("../controller/book.controller");
 
+// get book list
 router.get("/", bookController.index);
 
-router.get("/search", bookController.search);
+// router.get("/:id", bookController.view);
 
-router.get("/view/:id", bookController.view);
-
-//?
+// create book
 router.post(
-  "/create",
+  "/",
   upload.single("bookCover"),
   bookController.createPost
 );
 
-router.delete("/delete/:id", bookController.delete);
+// get book by id
+router.get("/:id", bookController.search);
 
+// delete book
+router.delete("/:id", bookController.delete);
+
+// update book
 router.patch(
-  "/edit/:id",
+  "/:id",
   upload.single("bookCover"),
   bookController.editPost
 );

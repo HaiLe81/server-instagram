@@ -13,7 +13,6 @@ module.exports = {
         let result = cartArr.reduce((acc, cur) => {
           return (acc += cur.count);
         }, 0);
-        console.log('count111', result)
         res.locals.countBooks = result;
       }
     });

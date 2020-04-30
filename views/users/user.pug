@@ -3,7 +3,7 @@ extends ../layout/layout.pug
 block cdn-bootstrap
 
   h2 List User
-
+  
   form(action="/users/search", method="GET")
     div.form-group.d-flex
       input(class="form-control", type="text", name="q", value= value ? value : '')
