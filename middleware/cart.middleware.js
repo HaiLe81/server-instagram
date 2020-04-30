@@ -5,12 +5,17 @@ module.exports = {
   cart: async (req, res, next) => {
     const id = req.signedCookies.sessionId;
     // count book add cart
-    await Sessions.find({}).then(doc => {
-      const cartArr = doc[0].cart;
-      let result = cartArr.reduce((acc, cur) => {
-        return (acc += cur.count);
-      }, 0);
-      res.locals.countBooks = result;
+    await Sessions.find({ id: id }).then(doc => {
+      if (!doc[0]) {
+        res.locals.countBooks = 0;
+      } else {
+        const cartArr = doc[0].cart;
+        let result = cartArr.reduce((acc, cur) => {
+          return (acc += cur.count);
+        }, 0);
+        console.log('count111', result)
+        res.locals.countBooks = result;
+      }
     });
 
     next();

@@ -7,7 +7,7 @@ var Transactions = require("../model/transactions.model");
 module.exports = {
   index: async (req, res) => {
     const { sessionId } = req.signedCookies;
-
+    console.log("sessionId", sessionId);
     let page = parseInt(req.query.page) || 1;
     let perPage = 3;
 
@@ -16,25 +16,40 @@ module.exports = {
 
     // let dataBooks = db.get("listBooks").value();
 
-    await Sessions.find().then(async doc => {
-      let pageSize = Math.ceil(doc[0].cart.length / 3);
-      let paginationSizes = pageSize >= 3 ? 3 : pageSize;
-
-      let pageCurrent = parseInt(req.query.page);
-      await Book.find().then(book => {
-        res.render("./cart/cart.pug", {
-          dataCart: doc[0].cart.slice(start, end),
-          fullCart: doc[0].cart,
-          paginationSize: paginationSizes,
-          pageSize: pageSize,
-          page_Current: pageCurrent,
-          dataBook: book
+    await Sessions.find({ id: sessionId }).then(async doc => {
+      console.log("doc1,", doc[0]);
+      if (!doc[0]) {
+        console.log('here1')
+        await Book.find().then(book => {
+          res.render("./cart/cart.pug", {
+            dataCart: 0,
+            fullCart: 0,
+            paginationSize: 0,
+            pageSize: 0,
+            page_Current: 0,
+            dataBook: book
+          });
         });
-      });
-    });
+      } else {
+        console.log('here2')
+        let pageSize = Math.ceil(doc[0].cart.length / 3);
+        let paginationSizes = pageSize >= 3 ? 3 : pageSize;
 
+        let pageCurrent = parseInt(req.query.page);
+        await Book.find().then(book => {
+          res.render("./cart/cart.pug", {
+            dataCart: doc[0].cart.slice(start, end),
+            fullCart: doc[0].cart,
+            paginationSize: paginationSizes,
+            pageSize: pageSize,
+            page_Current: pageCurrent,
+            dataBook: book
+          });
+        });
+      }
+    });
   },
-  addToCart: (req, res) => {
+  addToCart: (req, res, next) => {
     try {
       const { bookId } = req.params;
       const { sessionId } = req.signedCookies;
@@ -69,39 +84,39 @@ module.exports = {
       res.redirect("/bookStore/books");
     } catch (err) {
       console.log(err);
+      next(err);
     }
   },
   delete: async (req, res) => {
-    const id = req.signedCookies.sessionId;
-    const idBook = req.params.bookId;
+    try {
+      const id = req.signedCookies.sessionId;
+      const idBook = req.params.bookId;
 
-    await Sessions.find({ id: id }).then(doc => {
-      let listCart = doc[0].cart;
-      const index = listCart.findIndex(x => x.bookId === idBook);
-      let a = (listCart[index].count -= 1);
+      await Sessions.find({ id: id }).then(doc => {
+        console.log('doc', doc[0].cart)
+        let listCart = doc[0].cart;
+        const index = listCart.findIndex(x => x.bookId === idBook);
+        let a = (listCart[index].count-=1);
+        console.log('a', a)
+        if (a === 0) {
+          doc[0].cart.splice(index, 1)
+        }
+        doc[0].save();
+      });
 
-      if (a === 0) {
-        delete doc[0].cart[index];
-      }
-      doc[0].save();
-    });
-
-    res.redirect("/cart");
+      res.redirect("/cart");
+    } catch (err) {
+      console.log(err);
+    }
   },
-  postCart: async (req, res) => {
+  postCart: async (req, res, next) => {
     try {
       const id = shortid.generate();
       const { sessionId } = req.signedCookies;
       const userId = req.signedCookies.userId;
       const idTranSactions = shortid.generate();
       var notifi = [];
-      // check has user login
-      // const user = db
-      //   .get("listUser")
-      //   .find({ id: userId })
-      //   .value();
       await User.find({ id: userId }).then(async user => {
-        console.log("user", !user);
         if (!user[0]) {
           notifi.push("You need to be logged in to perform this operation");
         } else {
@@ -137,6 +152,7 @@ module.exports = {
       }
     } catch (err) {
       console.log(err);
+      next(err);
     }
   }
 };
