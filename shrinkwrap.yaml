@@ -1,5 +1,5 @@
 dependencies:
-  '@sendgrid/mail': 7.0.1
+  '@sendgrid/mail': 7.1.0
   bcrypt: 4.0.1
   cloudinary: 1.21.0
   cookie-parser: 1.4.5
@@ -12,8 +12,11 @@ dependencies:
   multer: 1.4.2
   pug: 2.0.4
   shortid: 2.2.15
+  swagger-ui-dist: 3.25.1
+  swagger-ui-express: 4.1.4
+  yamljs: 0.3.0
 packages:
-  /@sendgrid/client/7.0.1:
+  /@sendgrid/client/7.1.0:
     dependencies:
       '@sendgrid/helpers': 7.0.1
       axios: 0.19.2
@@ -21,7 +24,7 @@ packages:
     engines:
       node: '>=6.0.0'
     resolution:
-      integrity: sha512-HZhDD1bctv5rM0wqAz9LhJC1IL9YHn5jJvxPqiK/3f3WCQjRvraJ1AkqkFFNFd9lPBVLmcrORX04lojwl+5ZaA==
+      integrity: sha512-w0g0CCFKRnA68+tk1BTdibgRSLI9e3RC6H8HmN4HVAKfGHTxkbwM/nb+NDrvWUJ7g1etNS/7PXRzZNOVQJVydA==
   /@sendgrid/helpers/7.0.1:
     dependencies:
       chalk: 2.4.2
@@ -31,15 +34,15 @@ packages:
       node: '>= 6.0.0'
     resolution:
       integrity: sha512-i/zsissq1upgdywtuJKysaplJJZC24GdtEKiJC1IRlXvBHzIjH4eU+rqUFO8h+hGji3UMURGgMFuLUXTUYvZ9w==
-  /@sendgrid/mail/7.0.1:
+  /@sendgrid/mail/7.1.0:
     dependencies:
-      '@sendgrid/client': 7.0.1
+      '@sendgrid/client': 7.1.0
       '@sendgrid/helpers': 7.0.1
     dev: false
     engines:
       node: '>=6.0.0'
     resolution:
-      integrity: sha512-yFkhjrYQvwpdy8eUiDxLLgPp9o5jHQzjJ5qUkgMr2fuPuYSKKqbpPir1PXIHx0ek2VKkTsvj/7Z5UQk6hPZcrQ==
+      integrity: sha512-rafioHd98gz2eVhCN3jE/6XwXf4rr02ap5oN7+6M0nuRXbl1h5jla30JD4ZCwBlo+2qT8TnMi+H9T4Yj0F0zUA==
   /@types/babel-types/7.0.7:
     dev: false
     resolution:
@@ -128,6 +131,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-5hYdAkZlcG8tOLujVDTgCT+uPX0VnpAH28gWsLfzpXYm7wP6mp5Q/gYyR7YQ0cKVJcXJnl3j2kpBan13PtQf6w==
+  /argparse/1.0.10:
+    dependencies:
+      sprintf-js: 1.0.3
+    dev: false
+    resolution:
+      integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   /array-flatten/1.1.1:
     dev: false
     resolution:
@@ -1433,6 +1442,10 @@ packages:
     optional: true
     resolution:
       integrity: sha1-/0rm5oZWBWuks+eSqzM004JzyhE=
+  /sprintf-js/1.0.3:
+    dev: false
+    resolution:
+      integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
   /statuses/1.5.0:
     dev: false
     engines:
@@ -1510,6 +1523,20 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==
+  /swagger-ui-dist/3.25.1:
+    dev: false
+    resolution:
+      integrity: sha512-Sw/K95j1pT9TZtLKiHDEml7YqcXC9thTTQjxrvNgd9j1KzOIxpo/5lhHuUMAN/hxVAHetzmcBcQaBjywRXog8w==
+  /swagger-ui-express/4.1.4:
+    dependencies:
+      swagger-ui-dist: 3.25.1
+    dev: false
+    engines:
+      node: '>= v0.10.32'
+    peerDependencies:
+      express: '>=4.0.0'
+    resolution:
+      integrity: sha512-Ea96ecpC+Iq9GUqkeD/LFR32xSs8gYqmTW1gXCuKg81c26WV6ZC2FsBSPVExQP6WkyUuz5HEiR0sEv/HCC343g==
   /tar/4.4.13:
     dependencies:
       chownr: 1.1.4
@@ -1637,6 +1664,14 @@ packages:
     dev: false
     resolution:
       integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==
+  /yamljs/0.3.0:
+    dependencies:
+      argparse: 1.0.10
+      glob: 7.1.6
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-C/FsVVhht4iPQYXOInoxUM/1ELSf9EsgKH34FofQOp6hwCPrW4vG4w5++TED3xRUo8gD7l0P1J1dLlDYzODsTQ==
   /yargs/3.10.0:
     dependencies:
       camelcase: 1.2.1
@@ -1650,7 +1685,7 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  '@sendgrid/mail': ^7.0.0
+  '@sendgrid/mail': ^7.1.0
   bcrypt: ^4.0.1
   cloudinary: ^1.21.0
   cookie-parser: ^1.4.5
@@ -1663,3 +1698,6 @@ specifiers:
   multer: ^1.4.2
   pug: ^2.0.4
   shortid: ^2.2.15
+  swagger-ui-dist: ^3.25.1
+  swagger-ui-express: ^4.1.4
+  yamljs: ^0.3.0
