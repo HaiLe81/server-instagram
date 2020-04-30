@@ -19,8 +19,12 @@ block cdn-bootstrap
           each item in dataCart
               tr
                 - let e = dataBook.find(x => x.id === item.bookId)
+                - console.log('e', e)
                   th= count+=1
-                  td= e.title
+                  if(!e)
+                    td Not Found
+                  else
+                    td= e.title
                   td= item.count
                   td 
                     form(action="" method="POST")

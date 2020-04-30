@@ -39,19 +39,13 @@ module.exports = {
     }
   },
   search: async (req, res) => {
+    const { id } = req.params;
     try {
-      var q = req.query.q;
-      var valueSearch = q;
-
-      await Book.find().then(doc => {
-        const matchedTodos = doc.filter(item => {
-          return item.title.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-        });
-        return res.status(200).json({
-          listBook: matchedTodos,
-          value: valueSearch
-        });
-      });
+      
+      if(!id) throw Error("BookID is not valid")
+      const book = await Book.find({ id })
+      if(!book) throw Error({ message: "Book not found", status: 404 })
+      return res.status(200).json({ book })
     } catch ({ message = "Invalid request" }) {
       return res.status(400).send({ message });
     }

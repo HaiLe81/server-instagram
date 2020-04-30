@@ -5,53 +5,34 @@ var Book = require("../../model/book.model");
 
 module.exports = {
   index: async (req, res) => {
-    req.user = {
-      // id: "8QnKkqtaj",
-      // name: "Pham Thi Thanh",
-      // email: "PhamThiThanh@gmail.com",
-      // password: "$2b$10$nGjLDOeIpPswKF/LOZXLqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO",
-      // wrongLoginCount: 0,
-      // avatarUrl: "http://res.cloudinary.com/hai-le/image/upload/v1588004843/fwxylg2hmlsvc10oolkx.jpg",
-      // isAdmin: false
-    };
-
     try {
-      const idAccount = req.user.id;
+      const idAccount = req.params.id;
       let dataTransactions = [];
 
-      // await User.findOne({ id: idAccount }).then(async doc => {
-      // console.log('doc', doc)
-      if (req.user.isAdmin === false) {
-        // not admin
-        await Transactions.find({ userId: idAccount }).then(x => {
-          dataTransactions = x;
-        });
-      } else {
+      await User.find({}).then(async doc => {
+        console.log("doc", doc);
         // dataTransactions = db.get("transactions").value();
         await Transactions.find().then(doc => {
-          dataTransactions = doc;
-        });
-      }
-      // console.log("isAdmin", dataTransactions);
-      let page = parseInt(req.query.page) || 1;
-      let perPage = 3;
+          let page = parseInt(req.query.page) || 1;
+          let perPage = 3;
 
-      let start = (page - 1) * perPage;
-      let end = page * perPage;
-      let pageSize = Math.ceil(dataTransactions.length / 3);
-      let paginationSize = pageSize >= 3 ? 3 : pageSize;
-      User.find().then(dataUser => {
-        Book.find().then(databook => {
-          res.status(200).json({
-            fillListTransactions: dataTransactions,
-            dataUser: dataUser,
-            dataBook: databook,
-            panigationSize: paginationSize,
-            pageSize: pageSize
+          let start = (page - 1) * perPage;
+          let end = page * perPage;
+          let pageSize = Math.ceil(dataTransactions.length / 3);
+          let paginationSize = pageSize >= 3 ? 3 : pageSize;
+          User.find().then(dataUser => {
+            Book.find().then(databook => {
+              return res.status(200).json({
+                fillListTransactions: doc,
+                dataUser: dataUser,
+                dataBook: databook,
+                panigationSize: paginationSize,
+                pageSize: pageSize
+              });
+            });
           });
         });
       });
-      // });
     } catch ({ message = "Invalid request" }) {
       res.status(400).json({ message });
     }
@@ -79,7 +60,7 @@ module.exports = {
 
       // res.redirect("/transactions/");
     } catch ({ message = "Invalid request" }) {
-      return res.status(400).json({ message })
+      return res.status(400).json({ message });
     }
   },
   complete: async (req, res) => {
@@ -93,13 +74,13 @@ module.exports = {
           tran.isComplete = false;
         }
         tran.save();
-        return res.status(200).json({ 
+        return res.status(200).json({
           transaction: tran
-        })
+        });
         // res.redirect("/transactions");
       });
     } catch ({ message = "Invalid request" }) {
-      return res.status(400).send({ message })
+      return res.status(400).send({ message });
     }
   }
 };
