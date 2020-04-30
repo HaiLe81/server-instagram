@@ -30,6 +30,7 @@ const authApiRoutes = require("./api/routes/auth.route")
 const transactionsApiRoutes = require("./api/routes/transactions.route")
 const usersApiRoutes = require("./api/routes/user.route")
 const bookApiRoutes = require("./api/routes/book.route")
+const docsApiRoutes = require("./api/routes/docs.route")
 
 const transactionRoute = require("./routes/transaction.route");
 const authMiddleWare = require("./middleware/auth.middleware");
@@ -58,6 +59,7 @@ app.use("/api/v1/auth", authApiRoutes)
 app.use("/api/v1/transactions", transactionsApiRoutes)
 app.use("/api/v1/users", usersApiRoutes)
 app.use("/api/v1/books", bookApiRoutes)
+app.use("/api/v1/docs", docsApiRoutes)
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get(

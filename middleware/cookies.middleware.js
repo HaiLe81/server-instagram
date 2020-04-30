@@ -22,6 +22,8 @@ module.exports = {
       //   console.log(req.originalUrl, counter);
       //   next();
 
+      // should change this code
+      
       var cookie = req.cookies.count;
       if (cookie === undefined) {
         var randomNumber = Math.random().toString();

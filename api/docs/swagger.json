@@ -1,0 +1,191 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/HaiLe81/crud-list-book/1.0.0"
+  }, {
+    "description" : "BookStore API for dev",
+    "url" : "https://crud-list-book.glitch.me/api/v1/"
+  } ],
+  "info" : {
+    "description" : "This is a simple API",
+    "version" : "1.0.0",
+    "title" : "BookStore API",
+    "contact" : {
+      "email" : "lekhachai7979@gmail.com"
+    }
+  },
+  "tags" : [ {
+    "name" : "auth",
+    "description" : "Authentication"
+  }, {
+    "name" : "books",
+    "description" : "Access to books of store"
+  }, {
+    "name" : "users",
+    "description" : "Operations about users"
+  }, {
+    "name" : "transactions",
+    "description" : "Access to transactions of store"
+  }, {
+    "name" : "profile",
+    "description" : "Operations about profile of user"
+  } ],
+  "paths" : {
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "authenticate user",
+        "operationId" : "login",
+        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "password" ],
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "email" : "example@gmail.com",
+                  "password" : "123123"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "operator successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid request"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "User" : {
+        "type" : "object",
+        "required" : [ "id", "name", "email", "password", "isAdmin", "wrongLoginCount", "avatarUrl" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "userac001"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Example Name"
+          },
+          "emmail" : {
+            "type" : "string",
+            "example" : "example@gmail.com"
+          },
+          "password" : {
+            "type" : "string",
+            "example" : "$2b$10$nGjLDOeIpPswKF/AZI2LqexOLRXrHHPrRXtsPyZZFtyCAmU9tnXkO"
+          },
+          "isAdmin" : {
+            "type" : "boolean",
+            "example" : true
+          },
+          "wrongLoginCount" : {
+            "type" : "number",
+            "example" : 0
+          },
+          "avatarUrl" : {
+            "type" : "string",
+            "example" : "http://res.cloudinary.com/hai-le/image/upload/v1587985463/uqbgmixtkcag44asxtrc.png"
+          }
+        }
+      },
+      "Book" : {
+        "type" : "object",
+        "required" : [ "id", "title", "description", "coverUrl" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "book001"
+          },
+          "title" : {
+            "type" : "string",
+            "example" : "99 Đóa Hoa Tặng Em"
+          },
+          "description" : {
+            "type" : "string",
+            "example" : "Sách Hay FA Cần Đọc"
+          },
+          "coverUrl" : {
+            "type" : "string",
+            "example" : "http://res.cloudinary.com/hai-le/image/upload/v1587985463/uqbgmixtkcag44asxtrc.png"
+          }
+        }
+      },
+      "Transactions" : {
+        "type" : "object",
+        "required" : [ "id", "userId", "bookId", "isComplete" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "transac01"
+          },
+          "userId" : {
+            "type" : "string",
+            "example" : "userac001"
+          },
+          "bookId" : {
+            "type" : "string",
+            "example" : "book001"
+          }
+        }
+      },
+      "Sessions" : {
+        "type" : "object",
+        "required" : [ "id", "cart" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "example" : "session01"
+          },
+          "cart" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "bookId" : {
+                  "type" : "string",
+                  "example" : "book001"
+                },
+                "count" : {
+                  "type" : "number",
+                  "example" : 2
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
