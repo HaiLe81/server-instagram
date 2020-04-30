@@ -80,7 +80,6 @@ app.use(
 );
 app.use(
   "/bookStore",
-
   accountMiddleWare.isUser,
   accountMiddleWare.isAdmin,
   bookRoute
@@ -88,9 +87,8 @@ app.use(
 app.use(
   "/users",
   authMiddleWare.requireAuth,
-  accountMiddleWare.isAdmin,
   accountMiddleWare.isUser,
-
+  accountMiddleWare.isAdmin,
   userRoute
 );
 app.use(
