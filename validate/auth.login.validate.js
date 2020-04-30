@@ -14,7 +14,6 @@ module.exports = {
       const user = users.find(item => item.email === email);
 
       if (!user) {
-        // throw ('User does not exist')
         errors.push("User does not exist.");
       } else {
         let countWrongPassword = user.wrongLoginCount;

@@ -31,7 +31,6 @@ module.exports = {
         await Transactions.find().then(doc => {
           dataTransactions = doc;
         });
-        console.log("tran1", dataTransactions);
       }
       // console.log("isAdmin", dataTransactions);
       let page = parseInt(req.query.page) || 1;
@@ -61,7 +60,6 @@ module.exports = {
     try {
       const id = shortid.generate();
       const { user, book } = req.body;
-      console.log('zz', user, book)
       await Transactions.findOne({ userId: user }).then(tran => {
         if (!tran) {
           let newTan = Transactions();

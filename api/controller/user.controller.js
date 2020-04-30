@@ -92,21 +92,21 @@ module.exports = {
       }
       // check length username
       if (name.length > 30 || name.length < 2) {
-        throw "Greater than 2 characters and less than 30 chracters, Try again";
+        throw new Error("Greater than 2 characters and less than 30 chracters, Try again");
       }
       //check email null
       if (!email) {
-        throw "Emal is required";
+        throw new Error("Emal is required");
       }
 
       // check exist email
       if (isExisted) {
-        throw "The email already exist. Please use a different email";
+        throw new Error("The email already exist. Please use a different email");
       }
 
       //check password null
       if (!password) {
-        throw "Password is required";
+        throw new Error("Password is required");
       }
       // const userInput = req.body.name;
       await bcrypt.hash(req.body.password, saltRounds, async function(
@@ -148,10 +148,10 @@ module.exports = {
       // let id = parseInt(req.params.id);
       const user = await User.findOne({ id: id });
       if (!user) {
-        throw "opps! Please try again";
+        throw new Error("opps! Please try again");
       }
       if (user.name === name) {
-        throw "name already exists, please try another name";
+        throw new Error("name already exists, please try another name");
       }
       user.name = name;
       await user.save();
@@ -179,13 +179,13 @@ module.exports = {
       const user = await User.findOne({ id: id });
 
       if (!user) {
-        throw "oops! Please try again";
+        throw new Error("oops! Please try again");
       }
       if (!name) {
-        throw "Name is required!";
+        throw new Error("Name is required!");
       }
       if (!email) {
-        throw "Email is required!";
+        throw new Error("Email is required!");
       }
       // const file = req.file.path;
       var path;

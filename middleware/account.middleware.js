@@ -29,7 +29,7 @@ module.exports = {
     // isUser
     User.find({ id: req.signedCookies.userId }).then(user => {
       res.locals.user = user[0];
-      console.log('user', user[0])
+      // console.log('user', user[0])
     });
     next();
   }

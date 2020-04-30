@@ -79,10 +79,10 @@ module.exports = {
 
       // validate check lại
       if (!title) {
-        throw "Title is required";
+        throw new Error("Title is required");
       }
       if (!description) {
-        throw "Description is required";
+        throw new Error("Description is required");
       }
       var path;
       !req.file
@@ -127,10 +127,10 @@ module.exports = {
 
       var book = await Book.findOne({ id: id });
       if (!title) {
-        throw "Title is required!";
+        throw new Error("Title is required!")
       }
       if (!description) {
-        throw "Description is required!";
+        throw new Error("Description is required!");
       }
       var path;
       !req.file
