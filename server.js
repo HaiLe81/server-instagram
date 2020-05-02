@@ -43,12 +43,15 @@ const cartMiddleWare = require("./middleware/cart.middleware");
 const cookiesMiddleWare = require("./middleware/cookies.middleware");
 const accountMiddleWare = require("./middleware/account.middleware");
 
+const errorHandler = require("./middleware/error-handler.middleware");
+
 app.set("view engine", "pug");
 app.set("views", "./views");
 app.use(express.static("public"));
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(errorHandler.error)
 app.use(sessionMiddleWare.reqSession);
 app.use(cookiesMiddleWare.countCookieRequest);
 app.use(cartMiddleWare.cart);
@@ -59,6 +62,8 @@ app.use("/api/v1/transactions", transactionsApiRoutes);
 app.use("/api/v1/users", usersApiRoutes);
 app.use("/api/v1/books", bookApiRoutes);
 app.use("/api/v1/docs", docsApiRoutes);
+
+
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get(
@@ -108,9 +113,10 @@ app.use(
 
 app.use(
   "/customerShop",
-  accountMiddleWare.isUser,
   customerShopRoute
 );
+
+app.get("/*", (req, res) => res.render("./error/404.pug"));
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, () => {
