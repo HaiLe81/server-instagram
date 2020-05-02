@@ -20,11 +20,14 @@ mongoose
   })
   .then(_ => console.log("MongoDB connected"))
   .catch(err => console.log("MongoDB can't connect", err));
-
+// routes
 const authRoute = require("./routes/auth.route");
 const bookRoute = require("./routes/book.route");
 const userRoute = require("./routes/user.route");
 const cartRoute = require("./routes/cart.route");
+const shopRoute = require("./routes/shop.route");
+const customerShopRoute = require("./routes/customerShop.route");
+
 //api
 const authApiRoutes = require("./api/routes/auth.route");
 const transactionsApiRoutes = require("./api/routes/transactions.route");
@@ -32,6 +35,7 @@ const usersApiRoutes = require("./api/routes/user.route");
 const bookApiRoutes = require("./api/routes/book.route");
 const docsApiRoutes = require("./api/routes/docs.route");
 
+// middleware
 const transactionRoute = require("./routes/transaction.route");
 const authMiddleWare = require("./middleware/auth.middleware");
 const sessionMiddleWare = require("./middleware/session.middleware");
@@ -47,13 +51,9 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(sessionMiddleWare.reqSession);
 app.use(cookiesMiddleWare.countCookieRequest);
-
-// make all the files in 'public' available
-// https://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
 app.use(cartMiddleWare.cart);
 
-// api mobile
+// api
 app.use("/api/v1/auth", authApiRoutes);
 app.use("/api/v1/transactions", transactionsApiRoutes);
 app.use("/api/v1/users", usersApiRoutes);
@@ -80,6 +80,7 @@ app.use(
 );
 app.use(
   "/bookStore",
+
   accountMiddleWare.isUser,
   accountMiddleWare.isAdmin,
   bookRoute
@@ -87,8 +88,8 @@ app.use(
 app.use(
   "/users",
   authMiddleWare.requireAuth,
-  accountMiddleWare.isUser,
   accountMiddleWare.isAdmin,
+  accountMiddleWare.isUser,
   userRoute
 );
 app.use(
@@ -96,6 +97,19 @@ app.use(
   authMiddleWare.requireAuth,
   accountMiddleWare.isUser,
   transactionRoute
+);
+
+app.use(
+  "/shops",
+  authMiddleWare.requireAuth,
+  accountMiddleWare.isUser,
+  shopRoute
+);
+
+app.use(
+  "/customerShop",
+  accountMiddleWare.isUser,
+  customerShopRoute
 );
 
 // listen for requests :)

@@ -1,0 +1,18 @@
+extends ../layout/layout.pug
+
+block cdn-bootstrap
+
+  h5= `${user.name}`
+  
+  form(action="", method="POST")
+    .form-group
+      label Shop Name
+      input(class="form-control", name="name", type="text", 
+      value= values ? values.name: '')
+    .form-group
+      label Books
+      br
+      select#book(name="book",size="2" , multiple)
+        each book in Books
+          option(value=book.id)= book.title
+    button.btn.btn-primary.mt-2 Create
