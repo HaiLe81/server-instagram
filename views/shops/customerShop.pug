@@ -8,6 +8,7 @@ block shopBook
       tr
         th STT
         th Book
+        th action
     tbody
         - let count = 0;  
         - listBooks = shop.listBook
@@ -15,3 +16,5 @@ block shopBook
           tr
             td= count+=1
             td= Books.find(x => x.id === book.idBook).title
+            td
+              a.btn.btn-light(href="#") add
