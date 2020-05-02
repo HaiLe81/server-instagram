@@ -18,32 +18,6 @@ html
           #navbarNav.collapse.navbar-collapse
               ul.navbar-nav
                   li.nav-item
-                      a.nav-link(href='/') Home
-                  li.nav-item
-                      a.nav-link(href='/users') Users
-                  li.nav-item
-                      a.nav-link(href='/bookStore/books') Book
-                  li.nav-item
-                    a.nav-link(href='/transactions') Transactions
-                  li.nav-item.d-flex.align-items-center
-                    a.cart(href="/cart")
-                      img.nav-link(src="https://cdn.glitch.com/1eeeaa03-4c95-4acc-925a-ac933fed2ce6%2Fsupermarket.svg?v=1587797125082", style="height:30px; width:20px; padding:0")
-                      span.count= countBooks === undefined ? 0 : countBooks
-                  if existShop
-                    li.nav-item
-                      a.nav-link(href='/shops/manageShop/') My Shop
-          if user
-            .d-flex.align-items-center.dropdown
-              a.nav-link.dropdown-toggle#dropdownMenuButton(role="button",data-toggle="dropdown", aria-haspopup="true", aria-expanded="false")= user.name
-              .dropdown-menu
-                a.dropdown-item(href="/users/profile") Profile
-                if !existShop
-                  a.dropdown-item(href="/shops/") Create Shop
-                a.dropdown-item(href="/auth/logout") Logout
-          if !user
-            .btn-group
-              a.btn.btn-primary(href="/auth/login", role="button") login
-              //a.btn.btn-primary(href="/auth/register",role="button") Sign up
-            
+                      a.nav-link(href='/') BookShop            
     .container.pt-5
-            block cdn-bootstrap
+            block shopBook

@@ -2,6 +2,7 @@ const db = require("../db");
 let cookies_req = {};
 let counter = 0;
 var User = require("../model/user.model");
+var Shop = require("../model/shop.model");
 
 module.exports = {
   isAdmin: (req, res, next) => {
@@ -25,12 +26,17 @@ module.exports = {
       console.log(err);
     }
   },
-  isUser: (req, res, next) => {
+  isUser: async (req, res, next) => {
+    const { userId } = req.signedCookies
     // isUser
-    User.find({ id: req.signedCookies.userId }).then(user => {
+    await User.find({ id: userId }).then(user => {
       res.locals.user = user[0];
-      // console.log('user', user[0])
     });
+    // exist shop
+    await Shop.find({ userId })
+    .then(doc => {
+      res.locals.existShop = doc[0]
+    })
     next();
   }
 };
