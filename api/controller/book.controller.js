@@ -38,7 +38,7 @@ module.exports = {
       return res.status(400).json({ message });
     }
   },
-  search: async (req, res) => {
+  findBookById: async (req, res) => {
     const { id } = req.params;
     try {
       
@@ -46,6 +46,22 @@ module.exports = {
       const book = await Book.find({ id })
       if(!book) throw Error({ message: "Book not found", status: 404 })
       return res.status(200).json({ book })
+    } catch ({ message = "Invalid request" }) {
+      return res.status(400).send({ message });
+    }
+  },
+  search: async (req, res) => {
+    try {
+      var valueSearch = "";
+      var q = req.query.q;
+      valueSearch = q;
+      console.log('q', valueSearch)
+      await Book.find().then(doc => {
+        const matchedTodos = doc.filter(item => {
+          return item.title.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+        });
+        return res.status(200).json({ listBook: matchedTodos })
+      });
     } catch ({ message = "Invalid request" }) {
       return res.status(400).send({ message });
     }
