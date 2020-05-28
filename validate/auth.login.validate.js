@@ -1,4 +1,4 @@
-const sgMail = require("@sendgrid/mail");
+  const sgMail = require("@sendgrid/mail");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 var User = require("../model/user.model");
@@ -19,7 +19,7 @@ module.exports = {
         let countWrongPassword = user.wrongLoginCount;
         if (countWrongPassword >= 3) {
           errors.push(
-            "Enter the wrong password more than the specified number of times. Pleasa comback after a day"
+            "Enter the wrong password more than the specified number of times. Please comback after a day"
           );
 
           // using Twilio SendGrid's v3 Node.js Library
@@ -28,7 +28,7 @@ module.exports = {
           sgMail.setApiKey(process.env.SENDGRID_API_KEY);
           const msg = {
             to: email,
-            from: "lekhachai7979@gmail.com",
+            from: "nguyenvy3681@gmail.com",
             subject:
               "Enter the wrong password more than the specified number of times",
             text:
