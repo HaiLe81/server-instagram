@@ -4,12 +4,11 @@
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 require("dotenv").config();
-
+// var cors = require("cors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const app = express();
 const db = require("./db");
-
 const mongoose = require("mongoose");
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -34,6 +33,9 @@ const transactionsApiRoutes = require("./api/routes/transactions.route");
 const usersApiRoutes = require("./api/routes/user.route");
 const bookApiRoutes = require("./api/routes/book.route");
 const docsApiRoutes = require("./api/routes/docs.route");
+const postsApiRoutes = require("./api/routes/posts.route");
+const instagramLoginApiRoutes = require("./api/routes/instagram.account.route");
+const bookShare = require("./api/routes/bookShare.book.route");
 
 // middleware
 const transactionRoute = require("./routes/transaction.route");
@@ -51,28 +53,37 @@ app.use(express.static("public"));
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser(process.env.SESSION_SECRET));
-app.use(errorHandler.error)
+app.use(errorHandler.error);
 app.use(sessionMiddleWare.reqSession);
 app.use(cookiesMiddleWare.countCookieRequest);
 app.use(cartMiddleWare.cart);
-app.use(function (req, res, next) {
+// app.use(cors());
 
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    // Website you wish to allow to connect
-    // res.setHeader('Access-Control-Allow-Origin', 'https://5wsfl.csb.app/');
+app.use(function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  // Website you wish to allow to connect
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Request headers you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader("Access-Control-Allow-Credentials", true);
 
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
+  // Pass to next layer of middleware
+  next();
 });
 // api
 app.use("/api/v1/auth", authApiRoutes);
@@ -80,8 +91,9 @@ app.use("/api/v1/transactions", transactionsApiRoutes);
 app.use("/api/v1/users", usersApiRoutes);
 app.use("/api/v1/books", bookApiRoutes);
 app.use("/api/v1/docs", docsApiRoutes);
-
-
+app.use("/api/v1/posts", postsApiRoutes);
+app.use("/api/v1/instagram", instagramLoginApiRoutes);
+app.use("/api/v1/bookShare", bookShare);
 
 // https://expressjs.com/en/starter/basic-routing.html
 app.get(
@@ -129,10 +141,7 @@ app.use(
   shopRoute
 );
 
-app.use(
-  "/customerShop",
-  customerShopRoute
-);
+app.use("/customerShop", customerShopRoute);
 
 app.get("/*", (req, res) => res.render("./error/404.pug"));
 

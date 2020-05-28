@@ -194,6 +194,7 @@ module.exports = {
         });
       } else {
         // const file = req.file.path;
+              console.log('file', req.file.path)
         var path;
         !req.file
           ? (path =

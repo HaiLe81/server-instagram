@@ -10,7 +10,6 @@ module.exports = {
       let dataTransactions = [];
 
       await User.find({}).then(async doc => {
-        console.log("doc", doc);
         // dataTransactions = db.get("transactions").value();
         await Transactions.find().then(doc => {
           let page = parseInt(req.query.page) || 1;
@@ -40,22 +39,29 @@ module.exports = {
   createPost: async (req, res) => {
     try {
       const id = shortid.generate();
-      const { user, book } = req.body;
-      await Transactions.findOne({ userId: user }).then(tran => {
+      const { userId, bookId } = req.body;
+      if(!userId || !bookId) throw new Error('userId or bookId is required')
+      await Transactions.findOne({ userId: userId }).then(tran => {
         if (!tran) {
+          console.log('run here')
           let newTan = Transactions();
           newTan.id = id;
-          newTan.userId = user;
-          newTan.bookId = book;
+          newTan.userId = userId;
+          newTan.bookId = bookId;
           newTan.isComplete = false;
           newTan.save();
+          return res.status(200).json({ transaction: newTan, transactions: newTan, message: "Add transactions success" })
         } else {
-          tran.bookId = book;
+          tran.bookId = bookId;
           tran.save();
+          Transactions.find().then(doc => {
+            return res.status(200).json({
+              transaction: tran,
+              transactions: doc,
+              message: "Add transactions success"
+          })
+        })
         }
-        return res.status(200).json({
-          transaction: tran
-        });
       });
 
       // res.redirect("/transactions/");

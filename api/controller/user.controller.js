@@ -171,7 +171,6 @@ module.exports = {
             .upload(req.file.path)
             .then(result => result.url)
             .catch(error => console.log("erro:::>", error)));
-      console.log("path", path);
       await bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
         user.name = name;
         user.email = email;

@@ -25,7 +25,8 @@
     "mongoose": "^5.9.9",
     "swagger-ui-express": "^4.1.4",
     "swagger-ui-dist": "^3.25.1",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "cors": "^2.8.5"
   },
   "engines": {
     "node": "12.x"
