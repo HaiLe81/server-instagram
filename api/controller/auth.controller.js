@@ -1,112 +1,98 @@
+var cloudinary = require("cloudinary").v2;
 const shortid = require("shortid");
-var User = require("../../model/user.model");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
-const sgMail = require("@sendgrid/mail");
+const Account = require("../../model/instagram.accounts.model");
+const Post = require("../../model/instagram.posts.model");
+const Comment = require("../../model/instagram.comments.model");
+const Noti = require("../../model/instagram.notifications.model");
+
+const fs = require("fs");
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_SECRET,
+});
 
 module.exports = {
   postLogin: async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-      if (!email || !password) {
-        throw new Error("email or passwrod incorrect!");
+      if (!username || !password) {
+        throw new Error("username or passwrod is required!");
       }
-      const user = await User.findOne({ email });
+      const user = await Account.findOne({ username });
+      console.log("user", user);
       if (!user) {
-        throw new Error("email not exists!");
+        throw new Error("username incorrect!");
       }
-      let countWrongPassword = user.wrongLoginCount;
-      if (countWrongPassword > 3) {
-        const sgMail = require("@sendgrid/mail");
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        const msg = {
-          to: email,
-          from: "leedaeyang1@gmail.com",
-          subject:
-            "Enter the wrong password more than the specified number of times",
-          text:
-            "If you receive this email, because you have entered the wrong password more than 3 times. The account will be reopened in 24 hours after receiving this email. If you want to reopen your account quickly or contact us via email (lekhachai9999@gmail.com)",
-          html:
-            "If you receive this email, because you have entered the wrong password more than 3 times. The account will be reopened in 24 hours after receiving this email. If you want to reopen your account quickly or contact us via email (lekhachai9999@gmail.com)"
-        };
-        sgMail.send(msg).then(
-          () => {},
-          error => {
-            console.error(error);
-
-            if (error.response) {
-              console.error(error.response.body);
-            }
-          }
-        );
-      }
-      const result = bcrypt.compareSync(password, user.password);
-      if (result === false) {
-        User.find({ email: email }).then(doc => {
-          doc[0].wrongLoginCount = countWrongPassword += 1;
-          doc[0].save();
+      if (user.password !== password) {
+        throw new Error("password incorrect!");
+      } else {
+        user.logged_in = true;
+        user.save();
+        res.status(200).json({
+          message: "You have successfully logged in",
+          user: user,
         });
       }
-      res.status(200).json({
-        message: "You have successfully logged in",
-        user: user
-      });
     } catch ({ message = "Invalid request" }) {
-      return res.status(400).json({ message });
+      return res.status(400).send({ message });
     }
   },
-  register: async (req, res) => {
+  SignUp: async (req, res) => {
+    const id = shortid.generate();
+    const { username, fullname, email, password } = req.body;
     try {
-      const id = shortid.generate();
-      const { name, email, password } = req.body;
-      const isExisted = await User.exists({ email });
-      // check null username
-      if (!name) {
-        throw "User is required";
+      if (!username || !fullname || !email || !password) {
+        throw new Error("please check again");
       }
-      // check length username
-      if (name.length > 30 || name.length < 2) {
+      const user = await Account.findOne({ username });
+      const emailuser = await Account.findOne({ email });
+
+      if (user || emailuser) {
         throw new Error(
-          "Greater than 2 characters and less than 30 chracters, Try again"
+          "The username or email already exist. Please use a different username or email"
         );
       }
-      //check email null
-      if (!email) {
-        throw new Error("Emal is required");
-      }
-
-      // check exist email
-      if (isExisted) {
-        throw new Error(
-          "The email already exist. Please use a different email"
-        );
-      }
-
-      //check password null
-      if (!password) {
-        throw new Error("Password is required");
-      }
-      // const userInput = req.body.name;
-      await bcrypt.hash(req.body.password, saltRounds, async function(
-        err,
-        hash
-      ) {
-        const newUser = new User({
-          id: id,
-          name: req.body.name,
-          email: req.body.email,
-          isAdmin: false,
-          avatarUrl:
-            "https://i.ya-webdesign.com/images/default-avatar-png-18.png",
-          password: hash,
-          wrongLoginCount: 0
-        });
-        await newUser.save();
-        return res.status(200).json({ newUser, message: "Register success" });
+      const newAcc = new Account({
+        id: id,
+        username: username,
+        fullname: fullname,
+        email: email,
+        password: password,
+        logged_in: false,
+        follower: [`${id}`],
+        urlAvatar: "https://i.ya-webdesign.com/images/default-avatar-png-9.png",
       });
-      // res.redirect("/users/");
-    } catch ({ message = "Invalid request!" }) {
-      return res.status(400).json({ message });
+      newAcc.save();
+      res.status(200).json({ message: "Signup successfully" });
+    } catch ({ message = "Invalid request" }) {
+      res.status(400).json({ message });
+    }
+  },
+  forgetPassword: async (req, res) => {
+    const randomPassword = shortid.generate();
+    const { email } = req.body;
+    try {
+      const user = await Account.findOneAndUpdate(
+        { email },
+        { password: randomPassword },
+        { new: true }
+      );
+      user.password = randomPassword;
+      user.save();
+      const sgMail = require("@sendgrid/mail");
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      const msg = {
+        to: email,
+        from: "nguyenvy3681@gmail.com",
+        subject: "Sending with Twilio SendGrid is Fun",
+        text: "Reset Password",
+        html: `<strong>this is a new password for your account</strong>: ${randomPassword}`,
+      };
+      sgMail.send(msg);
+      res.status(200).json({ message: "ResetPassword Success" });
+    } catch ({ message = "Invalid request" }) {
+      res.status(400).json({ message });
     }
   },
 };

@@ -1,11 +1,9 @@
 var express = require('express')
 var router = express.Router()
-const shortid = require('shortid');
+const accountController = require('../controller/auth.controller.js')
 
-const authController = require('../controller/auth.controller.js')
+router.post('/login', accountController.postLogin)
+router.post('/signup', accountController.SignUp)
+router.patch('/forgetpassword', accountController.forgetPassword)
 
-router.post('/login', authController.postLogin)
-
-router.post('/register', authController.register)
-
-module.exports = router;
+module.exports = router; 
