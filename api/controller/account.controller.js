@@ -29,7 +29,7 @@ module.exports = {
       if (!id) throw new Error("invalid id");
       const user = await Account.find({ id });
       if (!user) throw new Error("user not found", res.status(404));
-      return res.status(200).json({ message: "Get Data Success",user });
+      return res.status(200).json({ message: "Get Data Success", user });
     } catch ({ message = "Invalid request" }) {
       res.status(400).json({ message });
     }
@@ -41,6 +41,44 @@ module.exports = {
         .status(200)
         .json({ message: "get posts success", accounts: acc });
       // const posts = await Post.find({ postId:  })
+    } catch ({ message = "Invalid request" }) {
+      res.status(400).json({ message });
+    }
+  },
+  followUser: async (req, res) => {
+    const { userId, followUserId } = req.body;
+    try {
+      // find user follow userId
+      const user = await Account.find({ id: userId }).then((doc) => {
+        if (!doc) {
+          throw new Error("Failed Manipulation");
+        } else {
+          // add followUserId to follower of userId
+          // check exists
+          const index = doc[0].follower.find((item) => item === followUserId);
+          console.log("index1", index);
+          if (!index) {
+            doc[0].follower.push(followUserId);
+            doc[0].save();
+          }
+        }
+      });
+      await Account.find({ id: followUserId }).then((doc) => {
+        console.log("doc", doc);
+        if (!doc) {
+          throw new Error("Failed Manipilation");
+        } else {
+          // add userId to followeMember of followUserId
+          // check exists
+          const index = doc[0].followMember.find((item) => item === userId);
+          console.log("index22", index);
+          if (!index) {
+            doc[0].followMember.push(userId);
+            doc[0].save();
+          }
+        }
+      });
+      return res.status(200).json({ message: "Manipilation Success!", user });
     } catch ({ message = "Invalid request" }) {
       res.status(400).json({ message });
     }

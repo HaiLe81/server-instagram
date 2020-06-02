@@ -19,6 +19,8 @@ const authApiRoutes = require("./api/routes/auth.route");
 const accountsApiRoutes = require("./api/routes/accounts.route");
 const postsApiRoutes = require("./api/routes/posts.route");
 const notiApiRoutes = require("./api/routes/notifications.route");
+const suggestionFollowApiRoutes = require("./api/routes/suggestionFollow.route");
+
 
 app.set("view engine", "pug");
 app.set("views", "./views");
@@ -59,6 +61,7 @@ app.use("/api/v1/auth", authApiRoutes);
 app.use("/api/v1/", accountsApiRoutes);
 app.use("/api/v1/", postsApiRoutes);
 app.use("/api/v1/", notiApiRoutes);
+app.use("/api/v1/", suggestionFollowApiRoutes);
 
 
 // https://expressjs.com/en/starter/basic-routing.html

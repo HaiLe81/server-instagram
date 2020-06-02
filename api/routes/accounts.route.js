@@ -10,4 +10,6 @@ router.get('/account/:id', accountController.getUserById)
 
 router.get('/accounts', accountController.getAccounts)
 
+router.patch('/follow', accountController.followUser)
+
 module.exports = router; 
