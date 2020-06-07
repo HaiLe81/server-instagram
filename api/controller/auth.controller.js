@@ -20,7 +20,6 @@ module.exports = {
         throw new Error("username or passwrod is required!");
       }
       const user = await Account.findOne({ username });
-      console.log("user", user);
       if (!user) {
         throw new Error("username incorrect!");
       }

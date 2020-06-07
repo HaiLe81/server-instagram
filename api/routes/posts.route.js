@@ -1,15 +1,13 @@
 var express = require('express')
 var router = express.Router()
-const accountController = require('../controller/instagram.account.controller.js')
-const multer = require('multer');
-const upload = multer({ dest: './public/uploads/' })
+const postsController = require('../controller/posts.controller.js')
 
 
-router.get('/timeline/:id', accountController.getPost)
-router.get('/comments/:postId', accountController.getComments)
-router.post('/like', accountController.postLike)
-router.post('/comment', accountController.postComment)
-router.get('/posts', accountController.getPostInstagtam)
-router.post('/newPost', accountController.addPost)
+router.get('/timeline/:id', postsController.getPost)
+router.get('/comments/:postId', postsController.getComments)
+router.post('/like', postsController.postLike)
+router.post('/comment', postsController.postComment)
+router.get('/posts', postsController.getPostInstagtam)
+router.post('/newPost', postsController.addPost)
 
 module.exports = router; 

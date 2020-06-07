@@ -56,7 +56,6 @@ module.exports = {
           // add followUserId to follower of userId
           // check exists
           const index = doc[0].follower.find((item) => item === followUserId);
-          console.log("index1", index);
           if (!index) {
             doc[0].follower.push(followUserId);
             doc[0].save();
@@ -64,14 +63,12 @@ module.exports = {
         }
       });
       await Account.find({ id: followUserId }).then((doc) => {
-        console.log("doc", doc);
         if (!doc) {
           throw new Error("Failed Manipilation");
         } else {
           // add userId to followeMember of followUserId
           // check exists
           const index = doc[0].followMember.find((item) => item === userId);
-          console.log("index22", index);
           if (!index) {
             doc[0].followMember.push(userId);
             doc[0].save();
