@@ -18,17 +18,19 @@ module.exports = {
       const { id } = req.params;
       const user = await Account.findOne({ id });
       const post = await Post.find();
+
       const followers = user.follower;
       // get posts
       var newArr = [];
-      await followers.map((item) => {
-        const result = post.find((post) => post.postId === item);
-        if (!result) {
-          return;
-        } else {
-          newArr.push(result);
+      for (let i = 0; i < followers.length; i++) {
+        console.log("fo", followers[i]);
+        for (let j = 0; j < post.length; j++) {
+          console.log("xc1", post[j]);
+          if (followers[i] === post[j].userId) {
+            newArr.push(post[j]);
+          }
         }
-      });
+      }
       res.status(200).json({ message: "get posts success", posts: newArr });
     } catch ({ message = "Invalid request" }) {
       res.status(400).json({ message });
