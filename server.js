@@ -14,6 +14,9 @@ mongoose
   .then(_ => console.log("MongoDB connected"))
   .catch(err => console.log("MongoDB can't connect", err));
 
+// middleware
+const authMiddleware = require("./middleware/auth");
+
 //api
 const authApiRoutes = require("./api/routes/auth.route");
 const accountsApiRoutes = require("./api/routes/accounts.route");
@@ -58,10 +61,10 @@ app.use(function(req, res, next) {
 });
 // api
 app.use("/api/v1/auth", authApiRoutes);
-app.use("/api/v1/", accountsApiRoutes);
-app.use("/api/v1/", postsApiRoutes);
-app.use("/api/v1/", notiApiRoutes);
-app.use("/api/v1/", suggestionFollowApiRoutes);
+app.use("/api/v1/", authMiddleware.isAuthorized, accountsApiRoutes);
+app.use("/api/v1/", authMiddleware.isAuthorized, postsApiRoutes);
+app.use("/api/v1/", authMiddleware.isAuthorized, notiApiRoutes);
+app.use("/api/v1/", authMiddleware.isAuthorized, suggestionFollowApiRoutes);
 
 
 // https://expressjs.com/en/starter/basic-routing.html

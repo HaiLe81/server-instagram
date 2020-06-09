@@ -24,7 +24,6 @@ module.exports = {
       var newArr = [];
       for (let i = 0; i < followers.length; i++) {
         for (let j = 0; j < post.length; j++) {
-          console.log("xc1", post[j]);
           if (followers[i] === post[j].userId) {
             newArr.push(post[j]);
           }

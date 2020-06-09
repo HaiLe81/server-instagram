@@ -1,11 +1,8 @@
 var cloudinary = require("cloudinary").v2;
 const shortid = require("shortid");
 const Account = require("../../model/instagram.accounts.model");
-const Post = require("../../model/instagram.posts.model");
-const Comment = require("../../model/instagram.comments.model");
-const Noti = require("../../model/instagram.notifications.model");
+const { generateAccessToken } = require("../../utils/jwt");
 
-const fs = require("fs");
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_KEY,
@@ -25,16 +22,35 @@ module.exports = {
       }
       if (user.password !== password) {
         throw new Error("password incorrect!");
-      } else {
-        user.logged_in = true;
-        user.save();
-        res.status(200).json({
-          message: "You have successfully logged in",
-          user: user,
-        });
       }
+      const token = await generateAccessToken(
+        user,
+        process.env.JWT_SECRET_KEY,
+        "1h"
+      );
+      user.logged_in = true;
+      user.save();
+      res.status(200).json({
+        message: "You have successfully logged in",
+        user: user,
+        token,
+      });
     } catch ({ message = "Invalid request" }) {
       return res.status(400).send({ message });
+    }
+  },
+  logOut: async (req, res) => {
+    const { id } = req.body;
+    try {
+      if (!id) {
+        throw new Error("User id is not valid");
+      }
+      const user = await Account.findOne({ username });
+      user.logged_in = false;
+      user.save();
+      res.status(200).json({ message: "Logout successfully" });
+    } catch ({ message = "Invalid request" }) {
+      res.status(400).json({ message });
     }
   },
   SignUp: async (req, res) => {
