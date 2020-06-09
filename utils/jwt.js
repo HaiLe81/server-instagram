@@ -9,6 +9,7 @@ const generateAccessToken = (user, secretKey, tokenLife = "12h") => {
     username: user.username,
     fullname: user.fullname,
     email: user.email,
+    urlAvatar: user.urlAvatar
   };
   const option = {
     algorithm: "HS256",

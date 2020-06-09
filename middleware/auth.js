@@ -1,3 +1,5 @@
+const { verifyToken } = require("../utils/jwt");
+
 module.exports.isAuthorized = async (req, res, next) => {
   let token = req.get("authorization");
   try {
